@@ -4,25 +4,28 @@ import {
   KeyboardAvoidingView,
   Platform,
   TextInput,
+  Pressable,
+  TouchableOpacity,
 } from "react-native";
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, {
+  createRef,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { useAuth } from "../../context/Auth";
 import { Link, useRouter, useSegments } from "expo-router";
-import { ResizeMode, Video } from "expo-av";
-import { Button, Div, Icon, Input, Text } from "react-native-magnus";
-import {
-  createUserWithEmailAndPassword,
-  sendEmailVerification,
-  updateProfile,
-} from "firebase/auth";
+import { Button, Div, Icon, Input, Snackbar, Text } from "react-native-magnus";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from "../../firebaseInit";
-
-const videoClip = "../../assets/videos/home_video.mp4";
+import BackgroundVideo from "./components/BackgroundVideo";
 
 const Signin = () => {
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const register = async (email: string, password: string) => {
     const placeholderAvatar =
@@ -35,8 +38,6 @@ const Signin = () => {
         password
       );
 
-      await sendEmailVerification(userCredential.user);
-
       await updateProfile(userCredential.user, {
         displayName: name,
         photoURL: placeholderAvatar,
@@ -45,21 +46,17 @@ const Signin = () => {
       });
     } catch (error) {
       if (error instanceof Error) {
+        snackbarRef.current.show(error.message);
         throw new Error(error.message);
       }
     }
   };
 
+  const snackbarRef = createRef<any>();
+
   return (
     <SafeAreaView style={styles.container}>
-      <Video
-        style={[StyleSheet.absoluteFill]}
-        source={require(videoClip)}
-        resizeMode={ResizeMode.COVER}
-        isLooping
-        useNativeControls={false}
-        shouldPlay={true}
-      />
+      <BackgroundVideo />
       <Div style={{ backgroundColor: "transparent" }}>
         <Text style={styles.title}>FREE OF TRASH</Text>
       </Div>
@@ -75,11 +72,16 @@ const Signin = () => {
           alignItems="center"
         >
           <Input
+            style={styles.input}
+            borderWidth={2}
             value={name}
             onChangeText={(text) => setName(text)}
             placeholder="Full Name"
+            focusBorderColor="yellow500"
           />
           <Input
+            style={styles.input}
+            keyboardType="email-address"
             value={email}
             onChangeText={(text) => setEmail(text)}
             placeholder="E-mail"
@@ -88,7 +90,16 @@ const Signin = () => {
             value={password}
             onChangeText={(text) => setPassword(text)}
             placeholder="Password"
-            secureTextEntry
+            secureTextEntry={!showPassword}
+            suffix={
+              <Pressable onPress={() => setShowPassword((prev) => !prev)}>
+                <Icon
+                  name={showPassword ? "eye" : "eye-off"}
+                  color="black"
+                  fontFamily="Feather"
+                />
+              </Pressable>
+            }
           />
           <Button
             onPress={() => register(email, password)}
@@ -107,6 +118,7 @@ const Signin = () => {
           </Text>
         </Div>
         <Div h={10}></Div>
+        <Snackbar ref={snackbarRef} bg="red600" color="white" />
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
@@ -131,5 +143,8 @@ const styles = StyleSheet.create({
   },
   login: {
     fontWeight: "700",
+  },
+  input: {
+    // backgroundColor: "transparent",
   },
 });

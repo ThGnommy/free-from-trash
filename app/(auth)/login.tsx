@@ -1,13 +1,20 @@
-import { KeyboardAvoidingView, Platform, StyleSheet } from "react-native";
+import {
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  StyleSheet,
+} from "react-native";
 import React, { useState } from "react";
-import { Div, Input, Text, Button } from "react-native-magnus";
+import { Div, Input, Text, Button, Icon } from "react-native-magnus";
 import { Link } from "expo-router";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../firebaseInit";
+import BackgroundVideo from "./components/BackgroundVideo";
 
 const Login = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const login = async (email: string, password: string) => {
     try {
@@ -20,7 +27,8 @@ const Login = () => {
   };
 
   return (
-    <Div>
+    <Div style={styles.container}>
+      <BackgroundVideo />
       <KeyboardAvoidingView
         style={{ width: "100%" }}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -41,7 +49,16 @@ const Login = () => {
             value={password}
             onChangeText={(text) => setPassword(text)}
             placeholder="Password"
-            secureTextEntry
+            secureTextEntry={!showPassword}
+            suffix={
+              <Pressable onPress={() => setShowPassword((prev) => !prev)}>
+                <Icon
+                  name={showPassword ? "eye" : "eye-off"}
+                  color="black"
+                  fontFamily="Feather"
+                />
+              </Pressable>
+            }
           />
           <Button
             onPress={() => login(email, password)}
@@ -53,9 +70,9 @@ const Login = () => {
             LOGIN WITH EMAIL
           </Button>
           <Text fontSize="xl" color="white">
-            Already a member?{" "}
-            <Link style={styles.login} href="/login">
-              Log in
+            Not yet a member?{" "}
+            <Link style={styles.login} href="/sign-in">
+              Register
             </Link>
           </Text>
         </Div>
@@ -70,7 +87,7 @@ export default Login;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "space-between",
+    justifyContent: "center",
     alignItems: "center",
   },
   buttonContainer: {

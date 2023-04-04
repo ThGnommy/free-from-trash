@@ -14,7 +14,6 @@ const RootLayoutNav = () => {
         // https://firebase.google.com/docs/reference/js/firebase.User
         // ...
         signIn(currentUser);
-        console.log({ currentUser: user });
       } else {
         // User is signed out
         // ...
@@ -27,7 +26,7 @@ const RootLayoutNav = () => {
   return (
     <Stack>
       <Stack.Screen name="sign-in" options={{ headerShown: false }} />
-      <Stack.Screen name="login" options={{}} />
+      <Stack.Screen name="login" options={{ headerShown: false }} />
     </Stack>
   );
 };

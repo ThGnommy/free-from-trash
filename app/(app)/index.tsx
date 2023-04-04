@@ -9,7 +9,6 @@ import { auth } from "../../firebaseInit";
 
 export const Home = () => {
   const { signOut } = useAuth();
-  const segment = useSegments();
 
   const user = auth.currentUser;
 
@@ -26,19 +25,7 @@ export const Home = () => {
 
   return (
     <Div style={styles.container}>
-      <Text>MAP</Text>
-      <Text fontSize={24}>
-        {JSON.stringify(user?.displayName || "unknown")}
-      </Text>
-      <Image
-        w={100}
-        h={100}
-        rounded="circle"
-        source={{ uri: user?.photoURL || "" }}
-      />
-      {/* Use a light status bar on iOS to account for the black space above the modal */}
-      <Button onPress={signOut}>Logout</Button>
-      <Button onPress={destroyUser}>Destroy user</Button>
+      <Text>PLACE LIST</Text>
       <StatusBar style={Platform.OS === "ios" ? "light" : "auto"} />
     </Div>
   );
