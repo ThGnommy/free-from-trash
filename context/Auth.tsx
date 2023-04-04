@@ -1,8 +1,11 @@
 import { useRouter, useSegments } from "expo-router";
+
 import React, { createContext, useContext, useEffect, useState } from "react";
+import { auth } from "../firebaseInit";
+import { signOut } from "firebase/auth";
 
 interface IAuthContext {
-  signIn: () => void;
+  signIn: (newUser: object) => void;
   signOut: () => void;
   user: {};
 }
@@ -26,10 +29,10 @@ const useProtectedRoute = (user: {}) => {
   useEffect(() => {
     const rootSegment = segment[0];
     // if the user doesn't exist and this route is not an auth route, push the user to sign-in screen
-    if (!user && rootSegment !== "(auth)") {
+    if (user === null && rootSegment !== "(auth)") {
       router.replace("/sign-in");
-    } else if (user && rootSegment === "(auth)") {
-      router.replace("/");
+    } else if (user !== null && rootSegment === "(auth)") {
+      router.replace("(app)/");
     }
   }, [user, segment]);
 };
@@ -39,11 +42,22 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   useProtectedRoute(user);
 
+  const logout = async () => {
+    try {
+      await signOut(auth);
+      setAuth(null);
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new Error(error.message);
+      }
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
-        signIn: () => setAuth({ user: "it's meee" }),
-        signOut: () => setAuth(null),
+        signIn: (newUser) => setAuth(newUser),
+        signOut: logout,
         user,
       }}
     >

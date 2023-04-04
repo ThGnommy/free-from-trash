@@ -1,31 +1,46 @@
 import { Link, useSegments } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
-import { Button, Platform, StyleSheet } from "react-native";
-import { Text, View } from "../../components/Themed";
+import { Platform, StyleSheet } from "react-native";
 import { useAuth } from "../../context/Auth";
+import { Button, Div, Image, Text } from "react-native-magnus";
+import { User, deleteUser } from "firebase/auth";
+import { auth } from "../../firebaseInit";
 
 export const Home = () => {
-  const { signOut, user } = useAuth();
+  const { signOut } = useAuth();
   const segment = useSegments();
 
-  useEffect(() => {}, []);
+  const user = auth.currentUser;
+
+  const destroyUser = async () => {
+    try {
+      await deleteUser(user as User);
+      signOut();
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new Error(error.message);
+      }
+    }
+  };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Home</Text>
-      <View
-        style={styles.separator}
-        lightColor="#eee"
-        darkColor="rgba(255,255,255,0.1)"
+    <Div style={styles.container}>
+      <Text>MAP</Text>
+      <Text fontSize={24}>
+        {JSON.stringify(user?.displayName || "unknown")}
+      </Text>
+      <Image
+        w={100}
+        h={100}
+        rounded="circle"
+        source={{ uri: user?.photoURL || "" }}
       />
-      <Text>{JSON.stringify(user)}</Text>
-      <Text>{JSON.stringify(segment)}</Text>
-      <Button title="Sign Out" onPress={signOut} />
-      <Link href="page-two">Page Two</Link>
       {/* Use a light status bar on iOS to account for the black space above the modal */}
+      <Button onPress={signOut}>Logout</Button>
+      <Button onPress={destroyUser}>Destroy user</Button>
       <StatusBar style={Platform.OS === "ios" ? "light" : "auto"} />
-    </View>
+    </Div>
   );
 };
 
