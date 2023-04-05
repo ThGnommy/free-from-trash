@@ -18,5 +18,3 @@ const BackgroundVideo = () => {
 };
 
 export default BackgroundVideo;
-
-const styles = StyleSheet.create({});

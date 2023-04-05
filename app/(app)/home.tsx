@@ -4,7 +4,6 @@ import { useEffect } from "react";
 import { Platform, StyleSheet } from "react-native";
 import { useAuth } from "../../context/Auth";
 import { Button, Div, Image, Text } from "react-native-magnus";
-import { User, deleteUser } from "firebase/auth";
 import { auth } from "../../firebaseInit";
 
 export const Home = () => {
@@ -12,16 +11,16 @@ export const Home = () => {
 
   const user = auth.currentUser;
 
-  const destroyUser = async () => {
-    try {
-      await deleteUser(user as User);
-      signOut();
-    } catch (error) {
-      if (error instanceof Error) {
-        throw new Error(error.message);
-      }
-    }
-  };
+  // const destroyUser = async () => {
+  //   try {
+  //     await deleteUser(user as User);
+  //     signOut();
+  //   } catch (error) {
+  //     if (error instanceof Error) {
+  //       throw new Error(error.message);
+  //     }
+  //   }
+  // };
 
   return (
     <Div style={styles.container}>

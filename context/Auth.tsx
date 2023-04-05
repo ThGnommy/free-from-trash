@@ -32,7 +32,7 @@ const useProtectedRoute = (user: {}) => {
     if (user === null && rootSegment !== "(auth)") {
       router.replace("/sign-in");
     } else if (user !== null && rootSegment === "(auth)") {
-      router.replace("(app)/");
+      router.replace("(app)/home");
     }
   }, [user, segment]);
 };
