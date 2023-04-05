@@ -7,14 +7,7 @@ import {
   Pressable,
   TouchableOpacity,
 } from "react-native";
-import React, {
-  createRef,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-import { useAuth } from "../../context/Auth";
+import React, { createRef, useState } from "react";
 import { Link, useRouter, useSegments } from "expo-router";
 import { Button, Div, Icon, Input, Snackbar, Text } from "react-native-magnus";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";

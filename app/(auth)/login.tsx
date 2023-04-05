@@ -4,8 +4,8 @@ import {
   Pressable,
   StyleSheet,
 } from "react-native";
-import React, { useState } from "react";
-import { Div, Input, Text, Button, Icon } from "react-native-magnus";
+import React, { createRef, useState } from "react";
+import { Div, Input, Text, Button, Icon, Snackbar } from "react-native-magnus";
 import { Link } from "expo-router";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../firebaseInit";
@@ -16,11 +16,14 @@ const Login = () => {
   const [password, setPassword] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
+  const snackbarRef = createRef<any>();
+
   const login = async (email: string, password: string) => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
     } catch (error) {
       if (error instanceof Error) {
+        snackbarRef.current.show(error.message);
         throw new Error(error.message);
       }
     }
@@ -78,6 +81,7 @@ const Login = () => {
         </Div>
         <Div h={10}></Div>
       </KeyboardAvoidingView>
+      <Snackbar ref={snackbarRef} bg="red600" color="white" />
     </Div>
   );
 };

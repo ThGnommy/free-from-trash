@@ -4,6 +4,7 @@ import { Avatar, Button, Div, Icon, Input, Text } from "react-native-magnus";
 import { updateProfile } from "firebase/auth";
 import { useAuth } from "../../context/Auth";
 import { auth } from "../../firebaseInit";
+import ProfilePicture from "./components/ProfilePicture";
 
 const Settings = () => {
   const { signOut } = useAuth();
@@ -33,13 +34,7 @@ const Settings = () => {
       <Text fontSize="4xl" py={10}>
         Your Profile
       </Text>
-      <Avatar
-        mb={10}
-        bg="red300"
-        color="red800"
-        size={100}
-        source={{ uri: currentUser?.photoURL! }}
-      />
+      <ProfilePicture />
       <Div
         bg="gray200"
         w="90%"

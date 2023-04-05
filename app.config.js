@@ -1,5 +1,6 @@
 module.exports = {
-  name: "MyApp",
+  scheme: "ree-of-trash",
+  name: "free-of-trash",
   version: "1.0.0",
   extra: {},
 };
