@@ -34,9 +34,7 @@ const AppLayout = () => {
             </TouchableOpacity>
           ),
           headerRight: () => (
-            <TouchableOpacity
-            // onPress={() => router.push("/settings")}
-            >
+            <TouchableOpacity onPress={() => router.push("map")}>
               <Icon
                 name="map-pin"
                 color="black"
@@ -62,6 +60,10 @@ const AppLayout = () => {
             </TouchableWithoutFeedback>
           ),
         }}
+      />
+      <Stack.Screen
+        name="map"
+        options={{ title: "Map", headerBackTitle: "Home" }}
       />
     </Stack>
   );

@@ -1,32 +1,27 @@
 import { Link, useSegments } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { useEffect } from "react";
-import { Platform, StyleSheet } from "react-native";
+import { useEffect, useState } from "react";
+import { Platform, SafeAreaView, StyleSheet } from "react-native";
 import { useAuth } from "../../context/Auth";
-import { Button, Div, Image, Text } from "react-native-magnus";
-import { auth } from "../../firebaseInit";
+import { Button, Div, Icon, Image, Modal, Text } from "react-native-magnus";
+import AddPlace from "./components/AddPlace";
 
 export const Home = () => {
   const { signOut } = useAuth();
 
-  const user = auth.currentUser;
-
-  // const destroyUser = async () => {
-  //   try {
-  //     await deleteUser(user as User);
-  //     signOut();
-  //   } catch (error) {
-  //     if (error instanceof Error) {
-  //       throw new Error(error.message);
-  //     }
-  //   }
-  // };
+  const [visible, setVisible] = useState<boolean>(false);
 
   return (
-    <Div style={styles.container}>
-      <Text>PLACE LIST</Text>
-      <StatusBar style={Platform.OS === "ios" ? "light" : "auto"} />
-    </Div>
+    <SafeAreaView style={{ flex: 1 }}>
+      <Div style={styles.container}>
+        <Text>PLACE LIST</Text>
+        <Button alignSelf="center" onPress={() => setVisible(true)}>
+          Add a new Place
+        </Button>
+        <AddPlace visible={visible} onPress={() => setVisible(false)} />
+        {/* <StatusBar style={Platform.OS === "ios" ? "light" : "auto"} /> */}
+      </Div>
+    </SafeAreaView>
   );
 };
 
