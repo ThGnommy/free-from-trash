@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
-import React, { useEffect, useRef, useState } from "react";
-import { Button, Icon, Modal } from "react-native-magnus";
+import React, { useRef, useState } from "react";
+import { Button, Div, Icon, Image, Modal } from "react-native-magnus";
 import MapView, { LatLng, Marker } from "react-native-maps";
 import useUserLocation from "../hooks/useUserLocation";
 
@@ -10,24 +10,27 @@ interface AddPlaceProps {
 }
 
 const AddPlace = ({ visible, onPress }: AddPlaceProps) => {
-  const [follow, setFollow] = useState(true);
+  const { location } = useUserLocation();
 
-  const { location, errorMsg } = useUserLocation();
+  const [markerLocation, setMarkerLocation] = useState<LatLng>();
 
-  const disablefollowsUserLocation = () => setFollow(false);
+  const mapRef = useRef<MapView | null>(null);
 
-  const getAddressFromCoord = (x) => {
-    console.log(x);
+  const goToUserLocation = () => {
+    mapRef.current?.animateCamera({ center: location, zoom: 18 });
   };
 
   return (
     <Modal isVisible={visible}>
       <MapView
-        showsUserLocation={true}
-        followsUserLocation={true}
-        // onRegionChangeComplete={disablefollowsUserLocation}
-        addressForCoordinate={(x: LatLng) => getAddressFromCoord(x)}
+        ref={mapRef}
+        provider="google"
         style={styles.map}
+        showsUserLocation={true}
+        showsMyLocationButton={true}
+        onMapReady={goToUserLocation}
+        userLocationUpdateInterval={30000}
+        onPress={(e) => setMarkerLocation(e.nativeEvent.coordinate)}
       >
         <Button
           bg="blue300"
@@ -40,7 +43,9 @@ const AddPlace = ({ visible, onPress }: AddPlaceProps) => {
         >
           <Icon color="gray900" name="x" fontFamily="Feather" fontSize={20} />
         </Button>
-        <Marker coordinate={location} />
+        {markerLocation && (
+          <Marker coordinate={markerLocation} title="My Location?" />
+        )}
       </MapView>
     </Modal>
   );
@@ -52,5 +57,16 @@ const styles = StyleSheet.create({
   map: {
     width: "100%",
     height: "100%",
+  },
+  markerFixed: {
+    left: "50%",
+    marginLeft: -24,
+    marginTop: -48,
+    position: "absolute",
+    top: "50%",
+  },
+  marker: {
+    height: 48,
+    width: 48,
   },
 });
