@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Button, Div, Icon, Image, Modal } from "react-native-magnus";
 import MapView, { LatLng, Marker } from "react-native-maps";
 import useUserLocation from "../hooks/useUserLocation";
@@ -12,7 +12,7 @@ interface AddPlaceProps {
 const AddPlace = ({ visible, onPress }: AddPlaceProps) => {
   const { location } = useUserLocation();
 
-  const [markerLocation, setMarkerLocation] = useState<LatLng>();
+  const [markerLocation, setMarkerLocation] = useState<LatLng | null>(null);
 
   const mapRef = useRef<MapView | null>(null);
 
@@ -20,8 +20,12 @@ const AddPlace = ({ visible, onPress }: AddPlaceProps) => {
     mapRef.current?.animateCamera({ center: location, zoom: 18 });
   };
 
+  const clearMarker = () => {
+    setMarkerLocation(null);
+  };
+
   return (
-    <Modal isVisible={visible}>
+    <Modal isVisible={visible} onDismiss={clearMarker}>
       <MapView
         ref={mapRef}
         provider="google"
