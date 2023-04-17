@@ -1,27 +1,52 @@
-import { Link, useSegments } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
-import { Platform, SafeAreaView, StyleSheet } from "react-native";
+import { SafeAreaView, StyleSheet } from "react-native";
 import { useAuth } from "../../context/Auth";
-import { Button, Div, Icon, Image, Modal, Text } from "react-native-magnus";
-import AddPlace from "./components/AddPlace";
+import { Button, Div, Fab, Icon, Text } from "react-native-magnus";
+// import AddPlace from "./components/NewPlaceFormScreen/AddPlace";
+import { useRouter } from "expo-router";
 
 export const Home = () => {
   const { signOut } = useAuth();
 
+  const router = useRouter();
+
   const [visible, setVisible] = useState<boolean>(false);
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <Div style={styles.container}>
-        <Text>PLACE LIST</Text>
-        <Button alignSelf="center" onPress={() => setVisible(true)}>
-          Add a new Place
+    <>
+      <SafeAreaView style={{ flex: 1 }}>
+        <Div style={styles.container}>
+          <Text>PLACE LIST</Text>
+          {/* <AddPlace visible={visible} onPress={() => setVisible(false)} /> */}
+          {/* <StatusBar style={Platform.OS === "ios" ? "light" : "auto"} /> */}
+        </Div>
+      </SafeAreaView>
+
+      <Fab bg="blue600" fontSize="xl">
+        <Button
+          p="none"
+          bg="transparent"
+          justifyContent="flex-end"
+          onPress={() => router.push("add-new-place-form")}
+        >
+          <Div rounded="sm" bg="white" p="sm">
+            <Text fontSize="md">Add a new place</Text>
+          </Div>
+          <Icon
+            w={30}
+            h={30}
+            name="place"
+            color="blue600"
+            fontFamily="MaterialIcons"
+            fontSize="5xl"
+            rounded="circle"
+            ml="md"
+            bg="white"
+          />
         </Button>
-        <AddPlace visible={visible} onPress={() => setVisible(false)} />
-        {/* <StatusBar style={Platform.OS === "ios" ? "light" : "auto"} /> */}
-      </Div>
-    </SafeAreaView>
+      </Fab>
+    </>
   );
 };
 

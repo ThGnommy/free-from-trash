@@ -65,6 +65,14 @@ const AppLayout = () => {
         name="map"
         options={{ title: "Map", headerBackTitle: "Home" }}
       />
+      <Stack.Screen
+        name="add-new-place-form"
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="new-place-confirmation"
+        // options={{ headerShown: false }}
+      />
     </Stack>
   );
 };

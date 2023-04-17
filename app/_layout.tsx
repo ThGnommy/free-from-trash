@@ -8,6 +8,7 @@ import { useColorScheme } from "react-native";
 import { AuthProvider, useAuth } from "../context/Auth";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../firebaseInit";
+import { AppProvider } from "../context/AppContext";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -58,7 +59,9 @@ function RootLayoutNav() {
     <>
       <ThemeProvider theme={theme}>
         <AuthProvider>
-          <Slot />
+          <AppProvider>
+            <Slot />
+          </AppProvider>
         </AuthProvider>
       </ThemeProvider>
     </>

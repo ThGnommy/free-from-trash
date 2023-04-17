@@ -1,11 +1,11 @@
 import { StyleSheet, TouchableOpacity } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Avatar, Div, Icon, Skeleton, Text } from "react-native-magnus";
-import { auth, storage } from "../../../firebaseInit";
+import { auth, storage } from "../../../../firebaseInit";
 import * as ImagePicker from "expo-image-picker";
 import { ref, uploadBytes } from "firebase/storage";
 import { User } from "firebase/auth";
-import { updateUserPhotoURL } from "../../../firebaseUtils";
+import { updateUserPhotoURL } from "../../../../firebaseUtils";
 
 const ProfilePicture = () => {
   const [userProfile, setUserProfile] = useState<string | null>(
@@ -43,8 +43,6 @@ const ProfilePicture = () => {
       xhr.open("GET", uri, true);
       xhr.send(null);
     });
-
-    console.log(blob);
 
     const storageRef = ref(storage, storagePath);
     // 'file' comes from the Blob or File API

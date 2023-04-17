@@ -4,7 +4,7 @@ import { Avatar, Button, Div, Icon, Input, Text } from "react-native-magnus";
 import { updateProfile } from "firebase/auth";
 import { useAuth } from "../../context/Auth";
 import { auth } from "../../firebaseInit";
-import ProfilePicture from "./components/ProfilePicture";
+import ProfilePicture from "./components/SettingsScreen/ProfilePicture";
 
 const Settings = () => {
   const { signOut } = useAuth();

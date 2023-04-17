@@ -10,7 +10,7 @@ import MapView, {
 import { Avatar, Div, Icon } from "react-native-magnus";
 import * as Location from "expo-location";
 import { auth } from "../../firebaseInit";
-import ProfilePicture from "./components/ProfilePicture";
+import ProfilePicture from "./components/SettingsScreen/ProfilePicture";
 
 const Map = () => {
   const [location, setLocation] = useState<object | null>(null);
