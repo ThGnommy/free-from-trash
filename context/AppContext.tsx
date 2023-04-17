@@ -6,6 +6,7 @@ interface INewPlace {
   creator: { name: string; profilePhoto: string; email: string };
   placeImages: [string, string, string];
   coordinate: LatLng;
+  previewMapImage: string;
   description?: string;
 }
 
@@ -13,6 +14,9 @@ interface IAppContext {
   newPlace: INewPlace;
   setCreator: ({ name, profilePhoto, email }: ICreator) => void;
   setCoordinate: (coord: LatLng) => void;
+  setNewImages: (imagesArray: [string, string, string]) => void;
+  setPreviewMapImage: (image: string) => void;
+  setNewDescription: (text: string) => void;
 }
 
 const defaultState = {
@@ -26,6 +30,7 @@ const defaultState = {
     latitude: 0,
     longitude: 0,
   } as LatLng,
+  previewMapImage: "",
   description: "",
 };
 
@@ -61,10 +66,34 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     });
   };
 
+  const setPreviewMapImage = (image: string) => {
+    setNewPlace({
+      ...newPlace,
+      previewMapImage: image,
+    });
+  };
+
+  const setNewImages = (imagesArray: [string, string, string]) => {
+    setNewPlace({
+      ...newPlace,
+      placeImages: imagesArray,
+    });
+  };
+
+  const setNewDescription = (text: string) => {
+    setNewPlace({
+      ...newPlace,
+      description: text,
+    });
+  };
+
   const values = {
     newPlace,
     setCreator,
     setCoordinate,
+    setNewImages,
+    setPreviewMapImage,
+    setNewDescription,
   };
 
   return <AppContext.Provider value={values}>{children}</AppContext.Provider>;

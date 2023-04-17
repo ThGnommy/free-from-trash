@@ -3,13 +3,11 @@ import React, { useContext, useState } from "react";
 import * as ExpoImagePicker from "expo-image-picker";
 import { Div, Icon, Image, Text } from "react-native-magnus";
 import { useApp } from "../../../../context/AppContext";
-const ImagePickerStep = ({
-  images,
-  setImages,
-}: {
-  images: [string, string, string];
-  setImages: (x: [string, string, string]) => void;
-}) => {
+const ImagePickerStep = () => {
+  const { setNewImages } = useApp();
+
+  const [images, setImages] = useState<[string, string, string]>(["", "", ""]);
+
   const pickImage = async (idx: number) => {
     // No permissions request is necessary for launching the image library
     let result = await ExpoImagePicker.launchImageLibraryAsync({
@@ -24,6 +22,7 @@ const ImagePickerStep = ({
       const replaced = images[idx].replace(images[idx], result.assets[0].uri);
       newArr[idx] = replaced;
       setImages(newArr);
+      setNewImages(newArr);
     }
   };
 

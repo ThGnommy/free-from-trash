@@ -1,14 +1,11 @@
 import { StyleSheet, TextInput } from "react-native";
 import React, { useState } from "react";
 import { Div, Text } from "react-native-magnus";
+import { useApp } from "../../../../context/AppContext";
 
-const PlaceDescriptionStep = ({
-  description,
-  setDescription,
-}: {
-  description: string;
-  setDescription: (x: string) => void;
-}) => {
+const PlaceDescriptionStep = () => {
+  const { setNewDescription } = useApp();
+
   return (
     <Div
       flex={1}
@@ -24,8 +21,7 @@ const PlaceDescriptionStep = ({
         multiline={true}
         maxLength={200}
         placeholder="Max length 200 characters."
-        onChangeText={(text) => setDescription(text)}
-        value={description}
+        onChangeText={(text) => setNewDescription(text)}
         keyboardType="default"
         style={styles.input}
       />

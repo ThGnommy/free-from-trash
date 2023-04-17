@@ -1,11 +1,6 @@
-import {
-  StyleSheet,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-} from "react-native";
+import { StyleSheet } from "react-native";
 import React, { useState } from "react";
 import { Button, Div, Icon, Image, Text } from "react-native-magnus";
-import { useRouter } from "expo-router";
 import PickLocationModal from "./PickLocationModal";
 import useUserLocation from "../../hooks/useUserLocation";
 import { mapPreviewLocation } from "../../../../utils/location";
@@ -15,7 +10,7 @@ import { useApp } from "../../../../context/AppContext";
 const MapPickerStep = () => {
   const { location } = useUserLocation();
 
-  const { setCoordinate } = useApp();
+  const { setCoordinate, setPreviewMapImage } = useApp();
 
   const defaultLocation = {
     latitude: 0,
@@ -33,14 +28,16 @@ const MapPickerStep = () => {
       longitude: location.longitude,
     };
 
-    setMapImage(mapPreviewLocation(coord));
     setCoordinate(coord);
+    setMapImage(mapPreviewLocation(coord));
+    setPreviewMapImage(mapPreviewLocation(coord));
   };
 
   const setPreviewWithMarkerPosition = (mapMarkerLocation: LatLng) => {
     setMapImage(mapPreviewLocation(mapMarkerLocation));
     setShowMap(false);
     setCoordinate(mapMarkerLocation);
+    setPreviewMapImage(mapPreviewLocation(mapMarkerLocation));
   };
 
   return (

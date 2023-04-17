@@ -1,19 +1,8 @@
 import { StyleSheet, useWindowDimensions } from "react-native";
-import React, {
-  ButtonHTMLAttributes,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-import { Button, Div, Icon, Text, Modal } from "react-native-magnus";
-import MapView, {
-  LatLng,
-  MapPressEvent,
-  Marker,
-  Overlay,
-} from "react-native-maps";
+import React, { useRef } from "react";
+import { Button, Icon, Modal } from "react-native-magnus";
+import MapView, { LatLng, MapPressEvent, Marker } from "react-native-maps";
 import useUserLocation from "../../hooks/useUserLocation";
-import * as Location from "expo-location";
 interface AddPlaceProps {
   visible: boolean;
   onClose: () => void;
@@ -43,16 +32,8 @@ const PickLocationModal = ({
     setMarkerLocation(e.nativeEvent.coordinate);
   };
 
-  const clearMarker = () => {
-    const defaultCoord = {
-      latitude: 0,
-      longitude: 0,
-    };
-    setMarkerLocation(defaultCoord);
-  };
-
   return (
-    <Modal isVisible={visible} onDismiss={clearMarker}>
+    <Modal isVisible={visible}>
       <MapView
         ref={mapRef}
         provider="google"

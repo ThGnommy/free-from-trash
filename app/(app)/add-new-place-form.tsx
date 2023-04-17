@@ -1,5 +1,5 @@
 import { Animated, StyleSheet, useWindowDimensions } from "react-native";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { ScrollDiv, Div, Button } from "react-native-magnus";
 import ImagePickerStep from "./components/NewPlaceFormScreen/ImagePickerStep";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -11,33 +11,29 @@ import { ICreator } from "../../context/types";
 const AddNewPlaceForm = () => {
   const currentUser = auth.currentUser;
 
-  const [images, setImages] = useState<[string, string, string]>(["", "", ""]);
-  const [description, setDescription] = useState<string>("");
-
   const { setCreator } = useApp();
 
-  const setNewPlace = () => {
+  useEffect(() => {
     const creator = {
       name: currentUser?.displayName || "",
       profilePhoto: currentUser?.photoURL || "",
       email: currentUser?.email || "",
     };
-
     setCreator(creator);
-  };
+  }, []);
 
   return (
     <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>
       <ScrollDiv flex={1}>
         <Div justifyContent="flex-start" alignItems="center" w="100%">
-          <ImagePickerStep images={images} setImages={setImages} />
+          <ImagePickerStep />
           <MapPickerStep />
-          <PlaceDescriptionStep
-            description={description}
-            setDescription={setDescription}
-          />
+          <PlaceDescriptionStep />
         </Div>
-        <Button onPress={setNewPlace} alignSelf="center">
+        <Button
+          // onPress={setNewPlace}
+          alignSelf="center"
+        >
           Confirm
         </Button>
       </ScrollDiv>
