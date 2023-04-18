@@ -67,12 +67,13 @@ const AppLayout = () => {
       />
       <Stack.Screen
         name="add-new-place-form"
-        options={{ headerShown: false }}
+        options={{ title: "Add a new Place" }}
       />
       <Stack.Screen
         name="new-place-confirmation"
-        // options={{ headerShown: false }}
+        options={{ title: "Place Review" }}
       />
+      <Stack.Screen name="camera" options={{ headerShown: false }} />
     </Stack>
   );
 };
