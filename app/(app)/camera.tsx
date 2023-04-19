@@ -4,17 +4,17 @@ import {
   useWindowDimensions,
 } from "react-native";
 import React, { useRef, useState } from "react";
-import { Camera, CameraType } from "expo-camera";
+import { Camera as ExpoCamera, CameraType } from "expo-camera";
 import { Div, Icon, Image } from "react-native-magnus";
 import { useRouter, useSearchParams } from "expo-router";
 import { useApp } from "../../context/AppContext";
 
-const camera = () => {
+const Camera = () => {
   const dimensions = useWindowDimensions();
   const deviceHeight = dimensions.height;
   const deviceWidth = dimensions.width;
 
-  const { setNewImages } = useApp();
+  const { setSingleNewImages, newPlace } = useApp();
 
   const router = useRouter();
 
@@ -32,9 +32,17 @@ const camera = () => {
   };
 
   const takePicture = async () => {
-    if (!camera) return;
     const photo = await cameraRef.current.takePictureAsync();
     setPreviewImage(photo.uri);
+  };
+
+  const confirmPhoto = () => {
+    setSingleNewImages(
+      Number(params.index),
+      previewImage!,
+      newPlace.placeImages
+    );
+    router.back();
   };
 
   const exitFromCamera = () => {
@@ -45,7 +53,7 @@ const camera = () => {
   return (
     <Div w={deviceWidth} h={deviceHeight}>
       {!previewImage ? (
-        <Camera ref={cameraRef} style={styles.camera} type={type}>
+        <ExpoCamera ref={cameraRef} style={styles.camera} type={type}>
           <TouchableOpacity
             style={styles.closeIcon}
             onPress={() => router.back()}
@@ -69,7 +77,7 @@ const camera = () => {
               fontSize={40}
             />
           </TouchableOpacity>
-        </Camera>
+        </ExpoCamera>
       ) : (
         <Div flex={1} w={deviceWidth} h={deviceHeight}>
           <Image w="100%" h="100%" source={{ uri: previewImage }} />
@@ -88,7 +96,7 @@ const camera = () => {
           </TouchableOpacity>
           <TouchableOpacity
             style={{ ...styles.photoIcon, left: deviceWidth / 2 - 20 }}
-            onPress={takePicture}
+            onPress={confirmPhoto}
           >
             <Icon name="done" fontFamily="MaterialIcons" fontSize={40} />
           </TouchableOpacity>
@@ -98,7 +106,7 @@ const camera = () => {
   );
 };
 
-export default camera;
+export default Camera;
 
 const styles = StyleSheet.create({
   camera: {

@@ -1,23 +1,18 @@
-import {
-  StyleSheet,
-  TouchableOpacity,
-  useWindowDimensions,
-} from "react-native";
+import { StyleSheet, TouchableOpacity } from "react-native";
 import React, { useRef, useState } from "react";
 import * as ExpoImagePicker from "expo-image-picker";
 import { Div, Icon, Image, Modal, Snackbar, Text } from "react-native-magnus";
 import { useApp } from "../../../../context/AppContext";
 import { useActionSheet } from "@expo/react-native-action-sheet";
-import { Camera, CameraType } from "expo-camera";
+import { Camera } from "expo-camera";
 import { useRouter } from "expo-router";
 const ImagePickerStep = () => {
-  const { setNewImages } = useApp();
+  const { setSingleNewImages, newPlace } = useApp();
   const router = useRouter();
-  const [images, setImages] = useState<[string, string, string]>(["", "", ""]);
 
   const { showActionSheetWithOptions } = useActionSheet();
 
-  const [permission, requestPermission] = Camera.useCameraPermissions();
+  const [_, requestPermission] = Camera.useCameraPermissions();
   const snackbarRef = useRef<any>();
 
   const pickImage = async (idx: number) => {
@@ -61,14 +56,11 @@ const ImagePickerStep = () => {
             });
 
             if (!result.canceled) {
-              const newArr: [string, string, string] = [...images];
-              const replaced = images[idx].replace(
-                images[idx],
-                result.assets[0].uri
+              setSingleNewImages(
+                idx,
+                result.assets[0].uri,
+                newPlace.placeImages
               );
-              newArr[idx] = replaced;
-              setImages(newArr);
-              setNewImages(newArr);
             }
             // Save
             break;
@@ -94,19 +86,19 @@ const ImagePickerStep = () => {
           flexWrap="wrap"
           style={{ gap: 10 }}
         >
-          {images.slice(0, 3).map((_, idx) => (
+          {newPlace.placeImages.map((_, idx) => (
             <TouchableOpacity
               onPress={() => pickImage(idx)}
               activeOpacity={0.7}
               style={styles.placeholderImageContaner}
               key={idx}
             >
-              {images[idx] ? (
+              {newPlace.placeImages[idx] ? (
                 <Image
                   rounded="md"
                   style={styles.image}
                   source={{
-                    uri: images[idx],
+                    uri: newPlace.placeImages[idx],
                   }}
                 />
               ) : (
