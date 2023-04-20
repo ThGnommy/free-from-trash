@@ -1,11 +1,61 @@
 import { StyleSheet } from "react-native";
 import React, { useEffect } from "react";
 import { Button, Div, Image, ScrollDiv, Text } from "react-native-magnus";
-import { auth } from "../../firebaseInit";
+import { auth, db, storage } from "../../firebaseInit";
 import { useApp } from "../../context/AppContext";
+import { collection, doc, setDoc } from "firebase/firestore";
+import { ref, uploadBytes } from "firebase/storage";
 
 const NewPlaceConfirmation = () => {
   const { newPlace } = useApp();
+
+  const uploadPlaceImages = async (id: string) => {
+    newPlace.placeImages.forEach(async (image: string, idx: number) => {
+      if (image !== "") {
+        const blob: Blob = await new Promise((resolve, reject) => {
+          const xhr = new XMLHttpRequest();
+          xhr.onload = function () {
+            resolve(xhr.response);
+          };
+          xhr.onerror = function (e) {
+            console.log(e);
+            reject(new TypeError("Network request failed"));
+          };
+          xhr.responseType = "blob";
+          xhr.open("GET", image, true);
+          xhr.send(null);
+        });
+
+        const storageRef = ref(storage, `${id}/image-${idx}`);
+        // 'file' comes from the Blob or File API
+        await uploadBytes(storageRef, blob).then(async (snapshot) => {
+          console.log("Uploaded a blob or file!");
+        });
+      }
+    });
+  };
+
+  const writeNewPlaceInDB = async () => {
+    const place = {
+      creator: newPlace.creator,
+      coordinate: newPlace.coordinate,
+      previewMapImage: newPlace.previewMapImage,
+      street: newPlace.street,
+      description: newPlace.description,
+    };
+
+    try {
+      const newPlaceRef = doc(collection(db, "places"));
+
+      await setDoc(newPlaceRef, place);
+
+      uploadPlaceImages(newPlaceRef.id);
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new Error(error.message);
+      }
+    }
+  };
 
   return (
     <ScrollDiv flex={1} p={10}>
@@ -46,7 +96,7 @@ const NewPlaceConfirmation = () => {
         Location: {newPlace.coordinate.latitude},{" "}
         {newPlace.coordinate.longitude}
       </Text>
-      <Button my={30} alignSelf="center">
+      <Button onPress={writeNewPlaceInDB} my={30} alignSelf="center">
         Confirm Place
       </Button>
     </ScrollDiv>

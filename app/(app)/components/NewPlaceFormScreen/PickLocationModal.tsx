@@ -7,7 +7,7 @@ interface AddPlaceProps {
   visible: boolean;
   onClose: () => void;
   onPositionSelect: () => void;
-  markerLocation: LatLng;
+  markerLocation: LatLng | null;
   setMarkerLocation: (x: LatLng) => void;
 }
 
@@ -32,6 +32,11 @@ const PickLocationModal = ({
     setMarkerLocation(e.nativeEvent.coordinate);
   };
 
+  const defaultLocation: LatLng = {
+    latitude: 0,
+    longitude: 0,
+  };
+
   return (
     <Modal isVisible={visible}>
       <MapView
@@ -45,34 +50,39 @@ const PickLocationModal = ({
         rotateEnabled={false}
         onPress={(e) => setNewMarkerLocation(e)}
       >
-        {markerLocation && (
-          <Marker coordinate={markerLocation} title="My Location" />
-        )}
+        {markerLocation && <Marker coordinate={markerLocation} />}
       </MapView>
+      <>
+        {markerLocation !== null ? (
+          <Button
+            w={180}
+            borderless
+            shadow="sm"
+            bg="white"
+            position="absolute"
+            bottom={50}
+            right={width / 2 - 90}
+            rounded="circle"
+            onPress={onPositionSelect}
+            color="black"
+          >
+            Set marker position
+          </Button>
+        ) : null}
+      </>
+
       <Button
-        w={180}
-        bg="blue200"
-        borderColor="black"
-        borderWidth={2}
+        borderless
+        shadow="sm"
+        bg="white"
         position="absolute"
-        bottom={50}
-        right={width / 2 - 90}
-        rounded="circle"
-        onPress={onPositionSelect}
-      >
-        Set marker position
-      </Button>
-      <Button
-        bg="gray400"
-        h={35}
-        w={35}
-        position="absolute"
-        top={50}
-        right={15}
+        top={60}
+        left={20}
         rounded="circle"
         onPress={onClose}
+        p={10}
       >
-        <Icon color="black900" name="close" />
+        <Icon color="black900" name="close" fontSize={18} />
       </Button>
     </Modal>
   );

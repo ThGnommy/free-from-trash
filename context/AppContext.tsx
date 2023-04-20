@@ -7,6 +7,7 @@ interface INewPlace {
   placeImages: [string, string, string];
   coordinate: LatLng;
   previewMapImage: string;
+  street: string;
   description?: string;
 }
 
@@ -18,6 +19,7 @@ interface IAppContext {
   setPreviewMapImage: (image: string) => void;
   setNewDescription: (text: string) => void;
   setSingleNewImages: (idx: number, previewImage: string) => void;
+  setNewStreet: (street: string) => void;
   removeSelectedImage: (idx: number) => void;
 }
 
@@ -33,6 +35,7 @@ const defaultState = {
     longitude: 0,
   } as LatLng,
   previewMapImage: "",
+  street: "",
   description: "",
 };
 
@@ -46,6 +49,8 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   const [newPlace, setNewPlace] = useState<INewPlace>(
     defaultState as INewPlace
   );
+
+  const [placesList, setPlacesList] = useState<INewPlace[] | null>(null);
 
   const setCreator = ({ name, profilePhoto, email }: ICreator) => {
     const updatedPlace = Object.assign(newPlace, {
@@ -108,12 +113,19 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     });
   };
 
-  const setNewDescription = (text: string) => {
+  const setNewStreet = (street: string) => {
     const updatedPlace = Object.assign(newPlace, {
-      description: text,
+      street,
     });
 
     setNewPlace(updatedPlace);
+  };
+
+  const setNewDescription = (text: string) => {
+    setNewPlace({
+      ...newPlace,
+      description: text,
+    });
   };
 
   const values = {
@@ -124,6 +136,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     setPreviewMapImage,
     setSingleNewImages,
     setNewDescription,
+    setNewStreet,
     removeSelectedImage,
   };
 

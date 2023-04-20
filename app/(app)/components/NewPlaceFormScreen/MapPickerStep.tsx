@@ -4,13 +4,13 @@ import { Button, Div, Icon, Image, Text } from "react-native-magnus";
 import PickLocationModal from "./PickLocationModal";
 import useUserLocation from "../../hooks/useUserLocation";
 import { mapPreviewLocation } from "../../../../utils/location";
+import * as Location from "expo-location";
 import { LatLng } from "react-native-maps";
 import { useApp } from "../../../../context/AppContext";
 
 const MapPickerStep = () => {
   const { location } = useUserLocation();
-
-  const { setCoordinate, setPreviewMapImage } = useApp();
+  const { setCoordinate, setPreviewMapImage, setNewStreet } = useApp();
 
   const defaultLocation = {
     latitude: 0,
@@ -19,25 +19,41 @@ const MapPickerStep = () => {
 
   const [mapImage, setMapImage] = useState<string | undefined>(undefined);
   const [showMap, setShowMap] = useState<boolean>(false);
-  const [mapMarkerLocation, setMapMarkerLocation] =
-    useState<LatLng>(defaultLocation);
+  const [mapMarkerLocation, setMapMarkerLocation] = useState<LatLng | null>(
+    null
+  );
 
-  const setCurrentLocation = () => {
+  const setCurrentLocation = async () => {
     const coord = {
       latitude: location.latitude,
       longitude: location.longitude,
     };
 
+    const street = await getStreetFromLocation(coord);
+
     setMapImage(mapPreviewLocation(coord));
     setCoordinate(coord);
     setPreviewMapImage(mapPreviewLocation(coord));
+    setNewStreet(street!);
   };
 
-  const setPreviewWithMarkerPosition = (mapMarkerLocation: LatLng) => {
+  const getStreetFromLocation = async (location: LatLng) => {
+    const street = await Location.reverseGeocodeAsync(location);
+    return street[0].name;
+  };
+
+  const setPreviewWithMarkerPosition = async (
+    mapMarkerLocation: LatLng | null
+  ) => {
+    const street = await getStreetFromLocation(mapMarkerLocation!);
+
     setShowMap(false);
-    setMapImage(mapPreviewLocation(mapMarkerLocation));
-    setCoordinate(mapMarkerLocation);
-    setPreviewMapImage(mapPreviewLocation(mapMarkerLocation));
+    setMapImage(mapPreviewLocation(mapMarkerLocation ?? defaultLocation));
+    setCoordinate(mapMarkerLocation ?? defaultLocation);
+    setPreviewMapImage(
+      mapPreviewLocation(mapMarkerLocation ?? defaultLocation)
+    );
+    setNewStreet(street!);
   };
 
   return (
