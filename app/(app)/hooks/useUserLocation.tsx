@@ -17,10 +17,11 @@ const useUserLocation = () => {
       return;
     }
 
-    let location = await Location.getCurrentPositionAsync({});
+    let location = await Location.getLastKnownPositionAsync();
+
     setLocation({
-      latitude: location.coords.latitude,
-      longitude: location.coords.longitude,
+      latitude: location!.coords.latitude!,
+      longitude: location!.coords.longitude!,
     });
   };
 

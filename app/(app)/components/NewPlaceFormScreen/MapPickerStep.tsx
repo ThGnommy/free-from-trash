@@ -28,14 +28,14 @@ const MapPickerStep = () => {
       longitude: location.longitude,
     };
 
-    setCoordinate(coord);
     setMapImage(mapPreviewLocation(coord));
+    setCoordinate(coord);
     setPreviewMapImage(mapPreviewLocation(coord));
   };
 
   const setPreviewWithMarkerPosition = (mapMarkerLocation: LatLng) => {
-    setMapImage(mapPreviewLocation(mapMarkerLocation));
     setShowMap(false);
+    setMapImage(mapPreviewLocation(mapMarkerLocation));
     setCoordinate(mapMarkerLocation);
     setPreviewMapImage(mapPreviewLocation(mapMarkerLocation));
   };

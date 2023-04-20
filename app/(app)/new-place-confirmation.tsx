@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { Button, Div, Image, ScrollDiv, Text } from "react-native-magnus";
 import { auth } from "../../firebaseInit";
 import { useApp } from "../../context/AppContext";
@@ -42,6 +42,10 @@ const NewPlaceConfirmation = () => {
           <Text fontSize="2xl">No description.</Text>
         )}
       </Div>
+      <Text>
+        Location: {newPlace.coordinate.latitude},{" "}
+        {newPlace.coordinate.longitude}
+      </Text>
       <Button my={30} alignSelf="center">
         Confirm Place
       </Button>

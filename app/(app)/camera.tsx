@@ -37,11 +37,7 @@ const Camera = () => {
   };
 
   const confirmPhoto = () => {
-    setSingleNewImages(
-      Number(params.index),
-      previewImage!,
-      newPlace.placeImages
-    );
+    setSingleNewImages(Number(params.index), previewImage!);
     router.back();
   };
 

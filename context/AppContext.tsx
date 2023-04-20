@@ -17,6 +17,8 @@ interface IAppContext {
   setNewImages: (imagesArray: [string, string, string]) => void;
   setPreviewMapImage: (image: string) => void;
   setNewDescription: (text: string) => void;
+  setSingleNewImages: (idx: number, previewImage: string) => void;
+  removeSelectedImage: (idx: number) => void;
 }
 
 const defaultState = {
@@ -46,45 +48,72 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   );
 
   const setCreator = ({ name, profilePhoto, email }: ICreator) => {
-    setNewPlace({
-      ...newPlace,
+    const updatedPlace = Object.assign(newPlace, {
       creator: {
         name,
         profilePhoto,
         email,
       },
     });
+
+    setNewPlace(updatedPlace);
   };
 
   const setCoordinate = ({ latitude, longitude }: LatLng) => {
-    setNewPlace({
-      ...newPlace,
+    const updatedPlace = Object.assign(newPlace, {
       coordinate: {
         latitude: latitude,
         longitude: longitude,
       },
     });
+
+    setNewPlace(updatedPlace);
   };
 
   const setPreviewMapImage = (image: string) => {
-    setNewPlace({
-      ...newPlace,
+    const updatedPlace = Object.assign(newPlace, {
       previewMapImage: image,
     });
+
+    setNewPlace(updatedPlace);
   };
 
   const setNewImages = (imagesArray: [string, string, string]) => {
+    const updatedPlace = Object.assign(newPlace, {
+      placeImages: imagesArray,
+    });
+
+    setNewPlace(updatedPlace);
+  };
+
+  const setSingleNewImages = (idx: number, previewImage: string) => {
+    const newArray: [string, string, string] = [...newPlace.placeImages];
+
+    newArray.splice(idx, 1, previewImage);
+
     setNewPlace({
       ...newPlace,
-      placeImages: imagesArray,
+      placeImages: newArray,
+    });
+  };
+
+  const removeSelectedImage = (idx: number) => {
+    const newArray: [string, string, string] = [...newPlace.placeImages];
+
+    newArray.splice(idx, 1, "");
+
+    setNewPlace({
+      ...newPlace,
+      placeImages: newArray,
     });
   };
 
   const setNewDescription = (text: string) => {
-    setNewPlace({
-      ...newPlace,
+    const updatedPlace = Object.assign(newPlace, {
       description: text,
     });
+
+    setNewPlace(updatedPlace);
   };
 
   const values = {
@@ -93,7 +122,9 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     setCoordinate,
     setNewImages,
     setPreviewMapImage,
+    setSingleNewImages,
     setNewDescription,
+    removeSelectedImage,
   };
 
   return <AppContext.Provider value={values}>{children}</AppContext.Provider>;

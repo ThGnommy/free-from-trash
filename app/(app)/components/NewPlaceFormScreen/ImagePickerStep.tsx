@@ -7,7 +7,7 @@ import { useActionSheet } from "@expo/react-native-action-sheet";
 import { Camera } from "expo-camera";
 import { useRouter } from "expo-router";
 const ImagePickerStep = () => {
-  const { setSingleNewImages, newPlace } = useApp();
+  const { setSingleNewImages, newPlace, removeSelectedImage } = useApp();
   const router = useRouter();
 
   const { showActionSheetWithOptions } = useActionSheet();
@@ -16,10 +16,20 @@ const ImagePickerStep = () => {
   const snackbarRef = useRef<any>();
 
   const pickImage = async (idx: number) => {
-    const options = ["Camera", "Gallery", "Cancel"];
+    const imageIsEmpty = newPlace.placeImages.at(idx) === "";
 
-    const destructiveButtonIndex = [0, 1];
-    const cancelButtonIndex = 2;
+    const optionsNoRemove = ["Camera", "Gallery", "Cancel"];
+    const optionsWithRemove = ["Camera", "Gallery", "Remove", "Cancel"];
+
+    const options = imageIsEmpty === true ? optionsNoRemove : optionsWithRemove;
+
+    const arrayNoRemove = [0, 1];
+    const arrayWithRemove = [0, 1, 2];
+
+    const destructiveButtonIndex =
+      imageIsEmpty === true ? arrayNoRemove : arrayWithRemove;
+
+    const cancelButtonIndex = imageIsEmpty === true ? 2 : 3;
 
     showActionSheetWithOptions(
       {
@@ -56,15 +66,12 @@ const ImagePickerStep = () => {
             });
 
             if (!result.canceled) {
-              setSingleNewImages(
-                idx,
-                result.assets[0].uri,
-                newPlace.placeImages
-              );
+              setSingleNewImages(idx, result.assets[0].uri);
             }
-            // Save
             break;
-
+          case destructiveButtonIndex[2]:
+            removeSelectedImage(idx);
+            break;
           case cancelButtonIndex:
           // Canceled
         }
