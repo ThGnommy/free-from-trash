@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Div, Icon, Image, Text } from "react-native-magnus";
 import PickLocationModal from "./PickLocationModal";
 import useUserLocation from "../../hooks/useUserLocation";
@@ -10,7 +10,8 @@ import { useApp } from "../../../../context/AppContext";
 
 const MapPickerStep = () => {
   const { location } = useUserLocation();
-  const { setCoordinate, setPreviewMapImage, setNewStreet } = useApp();
+  const { newPlace, setCoordinate, setPreviewMapImage, setNewStreet } =
+    useApp();
 
   const defaultLocation = {
     latitude: 0,
@@ -23,6 +24,13 @@ const MapPickerStep = () => {
     null
   );
 
+  useEffect(() => {
+    if (newPlace.previewMapImage && !mapImage)
+      setMapImage(newPlace.previewMapImage);
+
+    return () => setMapImage(undefined);
+  }, []);
+
   const setCurrentLocation = async () => {
     const coord = {
       latitude: location.latitude,
@@ -34,12 +42,13 @@ const MapPickerStep = () => {
     setMapImage(mapPreviewLocation(coord));
     setCoordinate(coord);
     setPreviewMapImage(mapPreviewLocation(coord));
-    setNewStreet(street!);
+    setNewStreet(street.street!, street.city!);
   };
 
   const getStreetFromLocation = async (location: LatLng) => {
     const street = await Location.reverseGeocodeAsync(location);
-    return street[0].name;
+
+    return { street: street[0].name, city: street[0].city };
   };
 
   const setPreviewWithMarkerPosition = async (
@@ -53,7 +62,7 @@ const MapPickerStep = () => {
     setPreviewMapImage(
       mapPreviewLocation(mapMarkerLocation ?? defaultLocation)
     );
-    setNewStreet(street!);
+    setNewStreet(street.street!, street.city!);
   };
 
   return (

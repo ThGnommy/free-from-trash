@@ -20,9 +20,9 @@ const AddNewPlaceForm = () => {
 
   useEffect(() => {
     const creator = {
-      name: currentUser?.displayName || "",
-      profilePhoto: currentUser?.photoURL || "",
-      email: currentUser?.email || "",
+      name: currentUser?.displayName!,
+      profilePhoto: currentUser?.photoURL!,
+      email: currentUser?.email!,
     };
     setCreator(creator);
   }, []);

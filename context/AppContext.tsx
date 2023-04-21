@@ -3,28 +3,31 @@ import { LatLng } from "react-native-maps";
 import { ICreator } from "./types";
 
 export interface INewPlace {
-  creator: { name: string; profilePhoto: string; email: string };
+  creator: ICreator;
   placeImages: [string, string, string];
   coordinate: LatLng;
   previewMapImage: string;
   street: string;
+  city: string;
   description?: string;
 }
 
 interface IAppContext {
   newPlace: INewPlace;
+  placeList: INewPlace[] | null;
   setCreator: ({ name, profilePhoto, email }: ICreator) => void;
   setCoordinate: (coord: LatLng) => void;
   setNewImages: (imagesArray: [string, string, string]) => void;
   setPreviewMapImage: (image: string) => void;
   setNewDescription: (text: string) => void;
   setSingleNewImages: (idx: number, previewImage: string) => void;
-  setNewStreet: (street: string) => void;
+  setNewStreet: (street: string, city: string) => void;
   removeSelectedImage: (idx: number) => void;
   updatePlaceList: (list: INewPlace[]) => void;
+  resetNewPlace: () => void;
 }
 
-const defaultState = {
+const defaultState: INewPlace = {
   creator: {
     name: "",
     profilePhoto: "",
@@ -37,6 +40,7 @@ const defaultState = {
   } as LatLng,
   previewMapImage: "",
   street: "",
+  city: "",
   description: "",
 };
 
@@ -122,9 +126,10 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     });
   };
 
-  const setNewStreet = (street: string) => {
+  const setNewStreet = (street: string, city: string) => {
     const updatedPlace = Object.assign(newPlace, {
       street,
+      city,
     });
 
     setNewPlace(updatedPlace);
@@ -135,6 +140,10 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
       ...newPlace,
       description: text,
     });
+  };
+
+  const resetNewPlace = () => {
+    setNewPlace(defaultState);
   };
 
   const values = {
@@ -149,6 +158,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     removeSelectedImage,
     placeList,
     updatePlaceList,
+    resetNewPlace,
   };
 
   return <AppContext.Provider value={values}>{children}</AppContext.Provider>;

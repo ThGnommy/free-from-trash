@@ -80,8 +80,6 @@ const ImagePickerStep = () => {
     );
   };
 
-  const handleCamera = () => {};
-
   return (
     <>
       <Div style={styles.container}>

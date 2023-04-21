@@ -36,9 +36,9 @@ const AppLayout = () => {
           headerRight: () => (
             <TouchableOpacity onPress={() => router.push("map")}>
               <Icon
-                name="map-pin"
+                name="map-marked-alt"
                 color="black"
-                fontFamily="Feather"
+                fontFamily="FontAwesome5"
                 fontSize={24}
               />
             </TouchableOpacity>

@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Div, Image, ScrollDiv, Text } from "react-native-magnus";
 import { db, storage } from "../../firebaseInit";
 import { useApp } from "../../context/AppContext";
@@ -12,9 +12,17 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import VerifyModal from "./components/NewPlaceFormScreen/VerifyModal";
+import { useRouter } from "expo-router";
 
 const NewPlaceConfirmation = () => {
-  const { newPlace } = useApp();
+  const router = useRouter();
+
+  const { newPlace, resetNewPlace } = useApp();
+
+  const [loading, setLoading] = useState(false);
+  const [verification, setVerification] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const uploadPlaceImages = async (id: string) => {
     newPlace.placeImages.forEach(async (image: string, idx: number) => {
@@ -62,11 +70,14 @@ const NewPlaceConfirmation = () => {
   };
 
   const writeNewPlaceInDB = async () => {
+    setLoading(true);
+
     const place = {
       creator: newPlace.creator,
       coordinate: newPlace.coordinate,
       previewMapImage: newPlace.previewMapImage,
       street: newPlace.street,
+      city: newPlace.city,
       description: newPlace.description,
       placeImages: [],
       date: Timestamp.now(),
@@ -77,7 +88,16 @@ const NewPlaceConfirmation = () => {
     try {
       await setDoc(newPlaceRef, place);
 
-      uploadPlaceImages(newPlaceRef.id);
+      await uploadPlaceImages(newPlaceRef.id);
+
+      setLoading(false);
+      setVerification(true);
+      setModalVisible(true);
+
+      setTimeout(() => {
+        setModalVisible(false);
+        resetNewPlace();
+      }, 2000);
     } catch (error) {
       if (error instanceof Error) {
         throw new Error(error.message);
@@ -85,7 +105,7 @@ const NewPlaceConfirmation = () => {
     }
   };
 
-  return (
+  return verification === false ? (
     <ScrollDiv flex={1} p={10}>
       <Text textAlign="center" fontSize="2xl">
         Selected images
@@ -124,10 +144,20 @@ const NewPlaceConfirmation = () => {
         Location: {newPlace.coordinate.latitude},{" "}
         {newPlace.coordinate.longitude}
       </Text>
-      <Button onPress={writeNewPlaceInDB} my={30} alignSelf="center">
+      <Button
+        loading={loading}
+        onPress={writeNewPlaceInDB}
+        my={30}
+        alignSelf="center"
+      >
         Confirm Place
       </Button>
     </ScrollDiv>
+  ) : (
+    <VerifyModal
+      onDismiss={() => router.replace("/home")}
+      visible={modalVisible}
+    />
   );
 };
 

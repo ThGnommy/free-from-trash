@@ -1,31 +1,33 @@
 import { StatusBar } from "expo-status-bar";
 import { useContext, useEffect, useState } from "react";
-import { SafeAreaView, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 import { useAuth } from "../../context/Auth";
-import { Button, Div, Fab, Icon, Text } from "react-native-magnus";
+import { Button, Div, Fab, Icon, ScrollDiv, Text } from "react-native-magnus";
 // import AddPlace from "./components/NewPlaceFormScreen/AddPlace";
 import { useRouter } from "expo-router";
-import { collection, doc, onSnapshot, query } from "firebase/firestore";
+import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import { db } from "../../firebaseInit";
 import { INewPlace, useApp } from "../../context/AppContext";
-import { setImagesFromStorage } from "../../firebaseUtils";
+
+import PlaceList from "./components/HomeScreen/PlaceList";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export const Home = () => {
-  const { updatePlaceList } = useApp();
+  const { updatePlaceList, placeList } = useApp();
 
   const router = useRouter();
 
   useEffect(() => {
-    const placeList = query(collection(db, "places"));
+    const placeList = query(collection(db, "places"), orderBy("date", "desc"));
 
     const unsubscribe = onSnapshot(placeList, (querySnapshot) => {
-      const temp: INewPlace[] = [];
+      const temp: unknown[] = [];
 
       querySnapshot.forEach((doc) => {
-        // const merged = Object.assign(doc.data(), { id: doc.id });
+        temp.push(doc.data());
       });
 
-      updatePlaceList(temp);
+      updatePlaceList(temp as INewPlace[]);
     });
 
     return unsubscribe;
@@ -33,12 +35,16 @@ export const Home = () => {
 
   return (
     <>
-      <SafeAreaView style={{ flex: 1 }}>
-        <Div style={styles.container}>
-          <Text>PLACE LIST</Text>
-          {/* <StatusBar style={Platform.OS === "ios" ? "light" : "auto"} /> */}
-        </Div>
-      </SafeAreaView>
+      {/* <ScrollDiv> */}
+      <Div flex={1}>
+        {placeList !== undefined ? (
+          <PlaceList />
+        ) : (
+          <Text>No plase was found...</Text>
+        )}
+        {/* <StatusBar style={Platform.OS === "ios" ? "light" : "auto"} /> */}
+      </Div>
+      {/* </ScrollDiv> */}
 
       <Fab bg="blue600" fontSize="xl">
         <Button
