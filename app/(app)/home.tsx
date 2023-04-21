@@ -1,24 +1,41 @@
 import { StatusBar } from "expo-status-bar";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { SafeAreaView, StyleSheet } from "react-native";
 import { useAuth } from "../../context/Auth";
 import { Button, Div, Fab, Icon, Text } from "react-native-magnus";
 // import AddPlace from "./components/NewPlaceFormScreen/AddPlace";
 import { useRouter } from "expo-router";
+import { collection, doc, onSnapshot, query } from "firebase/firestore";
+import { db } from "../../firebaseInit";
+import { INewPlace, useApp } from "../../context/AppContext";
+import { setImagesFromStorage } from "../../firebaseUtils";
 
 export const Home = () => {
-  const { signOut } = useAuth();
+  const { updatePlaceList } = useApp();
 
   const router = useRouter();
 
-  const [visible, setVisible] = useState<boolean>(false);
+  useEffect(() => {
+    const placeList = query(collection(db, "places"));
+
+    const unsubscribe = onSnapshot(placeList, (querySnapshot) => {
+      const temp: INewPlace[] = [];
+
+      querySnapshot.forEach((doc) => {
+        // const merged = Object.assign(doc.data(), { id: doc.id });
+      });
+
+      updatePlaceList(temp);
+    });
+
+    return unsubscribe;
+  }, []);
 
   return (
     <>
       <SafeAreaView style={{ flex: 1 }}>
         <Div style={styles.container}>
           <Text>PLACE LIST</Text>
-          {/* <AddPlace visible={visible} onPress={() => setVisible(false)} /> */}
           {/* <StatusBar style={Platform.OS === "ios" ? "light" : "auto"} /> */}
         </Div>
       </SafeAreaView>

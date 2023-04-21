@@ -2,7 +2,7 @@ import { createContext, useContext, useState } from "react";
 import { LatLng } from "react-native-maps";
 import { ICreator } from "./types";
 
-interface INewPlace {
+export interface INewPlace {
   creator: { name: string; profilePhoto: string; email: string };
   placeImages: [string, string, string];
   coordinate: LatLng;
@@ -21,6 +21,7 @@ interface IAppContext {
   setSingleNewImages: (idx: number, previewImage: string) => void;
   setNewStreet: (street: string) => void;
   removeSelectedImage: (idx: number) => void;
+  updatePlaceList: (list: INewPlace[]) => void;
 }
 
 const defaultState = {
@@ -50,7 +51,15 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     defaultState as INewPlace
   );
 
-  const [placesList, setPlacesList] = useState<INewPlace[] | null>(null);
+  const [placeList, setPlaceList] = useState<INewPlace[] | null>(null);
+
+  // Handle Place List functions
+
+  const updatePlaceList = (list: INewPlace[]) => {
+    setPlaceList(list);
+  };
+
+  // Handle new place functions
 
   const setCreator = ({ name, profilePhoto, email }: ICreator) => {
     const updatedPlace = Object.assign(newPlace, {
@@ -138,6 +147,8 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     setNewDescription,
     setNewStreet,
     removeSelectedImage,
+    placeList,
+    updatePlaceList,
   };
 
   return <AppContext.Provider value={values}>{children}</AppContext.Provider>;

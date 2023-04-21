@@ -1,10 +1,17 @@
 import { StyleSheet } from "react-native";
 import React, { useEffect } from "react";
 import { Button, Div, Image, ScrollDiv, Text } from "react-native-magnus";
-import { auth, db, storage } from "../../firebaseInit";
+import { db, storage } from "../../firebaseInit";
 import { useApp } from "../../context/AppContext";
-import { collection, doc, setDoc } from "firebase/firestore";
-import { ref, uploadBytes } from "firebase/storage";
+import {
+  Timestamp,
+  arrayUnion,
+  collection,
+  doc,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 const NewPlaceConfirmation = () => {
   const { newPlace } = useApp();
@@ -28,9 +35,28 @@ const NewPlaceConfirmation = () => {
 
         const storageRef = ref(storage, `${id}/image-${idx}`);
         // 'file' comes from the Blob or File API
-        await uploadBytes(storageRef, blob).then(async (snapshot) => {
-          console.log("Uploaded a blob or file!");
-        });
+        await uploadBytes(storageRef, blob)
+          .then(async () => {
+            // console.log("Uploaded a blob or file!");
+          })
+          .then(async () => {
+            // after update the image in storage, download it, update the url and the place data in firestore
+
+            const url = await getDownloadURL(
+              ref(storage, `${id}/image-${idx}`)
+            );
+
+            const imagesRef = doc(db, "places", id);
+
+            await updateDoc(imagesRef, {
+              placeImages: arrayUnion(url),
+            });
+          })
+          .catch((error) => {
+            if (error instanceof Error) {
+              throw new Error(error.message);
+            }
+          });
       }
     });
   };
@@ -42,11 +68,13 @@ const NewPlaceConfirmation = () => {
       previewMapImage: newPlace.previewMapImage,
       street: newPlace.street,
       description: newPlace.description,
+      placeImages: [],
+      date: Timestamp.now(),
     };
 
-    try {
-      const newPlaceRef = doc(collection(db, "places"));
+    const newPlaceRef = doc(collection(db, "places"));
 
+    try {
       await setDoc(newPlaceRef, place);
 
       uploadPlaceImages(newPlaceRef.id);
