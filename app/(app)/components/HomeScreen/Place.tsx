@@ -6,8 +6,6 @@ import { INewPlace } from "../../../../context/AppContext";
 const Place = ({
   creator,
   placeImages,
-  coordinate,
-  previewMapImage,
   street,
   city,
   description,

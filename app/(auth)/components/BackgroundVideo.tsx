@@ -10,7 +10,7 @@ const BackgroundVideo = () => {
       style={[StyleSheet.absoluteFill]}
       source={require(videoClip)}
       resizeMode={ResizeMode.COVER}
-      isLooping
+      isLooping={true}
       useNativeControls={false}
       shouldPlay={true}
     />

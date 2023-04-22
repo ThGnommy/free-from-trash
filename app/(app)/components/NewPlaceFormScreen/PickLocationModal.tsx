@@ -32,11 +32,6 @@ const PickLocationModal = ({
     setMarkerLocation(e.nativeEvent.coordinate);
   };
 
-  const defaultLocation: LatLng = {
-    latitude: 0,
-    longitude: 0,
-  };
-
   return (
     <Modal isVisible={visible}>
       <MapView

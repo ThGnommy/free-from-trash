@@ -11,14 +11,17 @@ import React, { createRef, useState } from "react";
 import { Link, useRouter, useSegments } from "expo-router";
 import { Button, Div, Icon, Input, Snackbar, Text } from "react-native-magnus";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { auth } from "../../firebaseInit";
+import { auth, db } from "../../firebaseInit";
 import BackgroundVideo from "./components/BackgroundVideo";
+import CitySelector from "./components/CitySelector";
+import { collection, doc, setDoc } from "firebase/firestore";
 
 const Signin = () => {
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [selectValue, setSelectedValue] = useState<string>("");
 
   const register = async (email: string, password: string) => {
     const placeholderAvatar =
@@ -37,6 +40,10 @@ const Signin = () => {
       }).catch((error) => {
         throw new Error(error.message);
       });
+
+      const newUserRef = doc(db, "users", userCredential.user.uid);
+
+      await setDoc(newUserRef, { province: selectValue });
     } catch (error) {
       if (error instanceof Error) {
         snackbarRef.current.show(error.message);
@@ -85,14 +92,20 @@ const Signin = () => {
             placeholder="Password"
             secureTextEntry={!showPassword}
             suffix={
-              <Pressable onPress={() => setShowPassword((prev) => !prev)}>
+              <TouchableOpacity
+                onPress={() => setShowPassword((prev) => !prev)}
+              >
                 <Icon
                   name={showPassword ? "eye" : "eye-off"}
                   color="black"
                   fontFamily="Feather"
                 />
-              </Pressable>
+              </TouchableOpacity>
             }
+          />
+          <CitySelector
+            selectValue={selectValue}
+            setSelectedValue={setSelectedValue}
           />
           <Button
             onPress={() => register(email, password)}
