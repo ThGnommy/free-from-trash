@@ -1,5 +1,7 @@
 export interface ICreator {
   name: string;
-  profilePhoto: string;
   email: string;
+  province: string;
+  photoURL: string;
+  uid: string;
 }

@@ -41,7 +41,7 @@ const NewPlaceConfirmation = () => {
           xhr.send(null);
         });
 
-        const storageRef = ref(storage, `${id}/image-${idx}`);
+        const storageRef = ref(storage, `places/${id}/image-${idx}`);
         // 'file' comes from the Blob or File API
         await uploadBytes(storageRef, blob)
           .then(async () => {
@@ -51,7 +51,7 @@ const NewPlaceConfirmation = () => {
             // after update the image in storage, download it, update the url and the place data in firestore
 
             const url = await getDownloadURL(
-              ref(storage, `${id}/image-${idx}`)
+              ref(storage, `places/${id}/image-${idx}`)
             );
 
             const imagesRef = doc(db, "places", id);
@@ -73,7 +73,7 @@ const NewPlaceConfirmation = () => {
     setLoading(true);
 
     const place = {
-      creator: newPlace.creator,
+      creatorUID: newPlace.creatorUID,
       coordinate: newPlace.coordinate,
       previewMapImage: newPlace.previewMapImage,
       street: newPlace.street,

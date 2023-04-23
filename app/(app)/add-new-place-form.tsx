@@ -14,17 +14,12 @@ const AddNewPlaceForm = () => {
 
   const router = useRouter();
 
-  const { setCreator, newPlace } = useApp();
+  const { setCreatorUID, newPlace } = useApp();
 
   const snackbarRef = useRef<any>();
 
   useEffect(() => {
-    const creator = {
-      name: currentUser?.displayName!,
-      profilePhoto: currentUser?.photoURL!,
-      email: currentUser?.email!,
-    };
-    setCreator(creator);
+    setCreatorUID(currentUser?.uid!);
   }, []);
 
   const goToConfirmationScreen = () => {

@@ -1,18 +1,39 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Badge, Button, Div, Icon, Image, Text } from "react-native-magnus";
 import { ImageBackground, StyleSheet } from "react-native";
 import { INewPlace } from "../../../../context/AppContext";
+import { query, collection, where, getDocs } from "firebase/firestore";
+import { db } from "../../../../firebaseInit";
 
 const Place = ({
-  creator,
+  creatorUID,
   placeImages,
   street,
   city,
   description,
 }: INewPlace) => {
+  const [name, setName] = useState<string>("");
+  const [photoURL, setPhotoURL] = useState<string>("");
+
+  const getPlaceInfo = async () => {
+    const q = query(collection(db, "users"), where("uid", "==", creatorUID));
+
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      // doc.data() is never undefined for query doc snapshots
+      console.log(doc.id, " => ", doc.data());
+
+      setName(doc.data().name);
+      setPhotoURL(doc.data().photoURL);
+    });
+  };
+
+  useEffect(() => {
+    getPlaceInfo();
+  }, []);
+
   return (
     <Div shadow="sm" m={10} p={10} rounded="md" bg="white">
-      {/* <Image w="100%" h={150} rounded="md" source={{ uri: placeImages[0] }}> */}
       <Div
         h={150}
         rounded="md"
@@ -45,20 +66,26 @@ const Place = ({
       {/* <Button w="100%">Show More</Button> */}
       <Div
         flexDir="row"
-        justifyContent="flex-end"
+        justifyContent="space-between"
         alignItems="center"
-        style={{ gap: 10 }}
         mt={10}
       >
-        <Text>{creator.name}'s Place</Text>
-
-        <Image
-          h={40}
-          w={40}
-          rounded="circle"
-          source={{
-            uri: creator.profilePhoto,
-          }}
+        <Div row alignItems="center">
+          <Image
+            h={40}
+            w={40}
+            rounded="circle"
+            source={{
+              uri: photoURL,
+            }}
+          />
+          <Text ml={10}>{name}'s Place</Text>
+        </Div>
+        <Icon
+          name="chevron-right"
+          fontFamily="Feather"
+          fontSize={24}
+          color="black"
         />
       </Div>
     </Div>

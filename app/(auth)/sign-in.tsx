@@ -39,9 +39,15 @@ const Signin = () => {
         email: email,
         province: province,
         photoURL: placeholderAvatar,
+        uid: userCredential.user.uid,
       };
 
       await setDoc(newUserRef, userData);
+
+      await updateProfile(userCredential.user, {
+        displayName: name,
+        photoURL: placeholderAvatar,
+      });
     } catch (error) {
       if (error instanceof Error) {
         snackbarRef.current.show(error.message);

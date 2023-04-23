@@ -2,6 +2,7 @@ import { StyleSheet } from "react-native";
 import React, { useEffect } from "react";
 import { Div, Icon, Modal, Text } from "react-native-magnus";
 import { useApp } from "../../../../context/AppContext";
+import { auth } from "../../../../firebaseInit";
 
 const VerifyModal = ({
   visible,
@@ -11,6 +12,8 @@ const VerifyModal = ({
   onDismiss: () => void;
 }) => {
   const { newPlace } = useApp();
+
+  const currentUser = auth.currentUser;
 
   return (
     <Modal isVisible={visible} onDismiss={onDismiss}>
@@ -27,7 +30,7 @@ const VerifyModal = ({
         />
         <Div>
           <Text mb={20} fontSize="5xl">
-            Thanks {newPlace.creator.name}!
+            Thanks {currentUser?.displayName}!
           </Text>
           <Text fontSize="3xl">The place is added successfully.</Text>
         </Div>

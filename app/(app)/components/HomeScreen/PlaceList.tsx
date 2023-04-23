@@ -11,7 +11,7 @@ const PlaceList = () => {
       data={placeList}
       renderItem={({ item }) => (
         <Place
-          creator={item.creator}
+          creatorUID={item.creatorUID}
           placeImages={item.placeImages}
           coordinate={item.coordinate}
           previewMapImage={item.previewMapImage}

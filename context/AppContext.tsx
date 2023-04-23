@@ -3,7 +3,7 @@ import { LatLng } from "react-native-maps";
 import { ICreator } from "./types";
 
 export interface INewPlace {
-  creator: ICreator;
+  creatorUID: string;
   placeImages: [string, string, string];
   coordinate: LatLng;
   previewMapImage: string;
@@ -15,7 +15,7 @@ export interface INewPlace {
 interface IAppContext {
   newPlace: INewPlace;
   placeList: INewPlace[] | null;
-  setCreator: ({ name, profilePhoto, email }: ICreator) => void;
+  setCreatorUID: (uid: string) => void;
   setCoordinate: (coord: LatLng) => void;
   setNewImages: (imagesArray: [string, string, string]) => void;
   setPreviewMapImage: (image: string) => void;
@@ -30,11 +30,7 @@ interface IAppContext {
 }
 
 const defaultState: INewPlace = {
-  creator: {
-    name: "",
-    profilePhoto: "",
-    email: "",
-  },
+  creatorUID: "",
   placeImages: ["", "", ""],
   coordinate: {
     latitude: 0,
@@ -67,13 +63,9 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
 
   // Handle new place functions
 
-  const setCreator = ({ name, profilePhoto, email }: ICreator) => {
+  const setCreatorUID = (uid: string) => {
     const updatedPlace = Object.assign(newPlace, {
-      creator: {
-        name,
-        profilePhoto,
-        email,
-      },
+      creatorUID: uid,
     });
 
     setNewPlace(updatedPlace);
@@ -156,7 +148,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
 
   const values = {
     newPlace,
-    setCreator,
+    setCreatorUID,
     setCoordinate,
     setNewImages,
     setPreviewMapImage,
