@@ -59,6 +59,16 @@ const AppLayout = () => {
               />
             </TouchableWithoutFeedback>
           ),
+          headerRight: () => (
+            <TouchableWithoutFeedback onPress={() => {}}>
+              <Icon
+                name="edit"
+                color="black"
+                fontFamily="Feather"
+                fontSize={24}
+              />
+            </TouchableWithoutFeedback>
+          ),
         }}
       />
       <Stack.Screen

@@ -1,6 +1,7 @@
 import { User, updateProfile } from "firebase/auth";
 import { getDownloadURL, listAll, ref } from "firebase/storage";
-import { storage } from "./firebaseInit";
+import { db, storage } from "./firebaseInit";
+import { doc, getDoc } from "firebase/firestore";
 
 export const updateUserPhotoURL = async (user: User, storagePath: string) => {
   try {
@@ -33,4 +34,17 @@ export const setImagesFromStorage = async (id: string): Promise<void> => {
     .catch((error) => {
       // Uh-oh, an error occurred!
     });
+};
+
+export const readUserProvince = async (currentUser: User) => {
+  const docRef = doc(db, "users", currentUser?.uid!);
+  const docSnap = await getDoc(docRef);
+
+  if (docSnap.exists()) {
+    console.log("Document data:", docSnap.data());
+    return docSnap.data().province;
+  } else {
+    // docSnap.data() will be undefined in this case
+    console.log("No such document!");
+  }
 };

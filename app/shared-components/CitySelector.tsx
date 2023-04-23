@@ -47,10 +47,7 @@ const CitySelector = ({
       </Button>
 
       <Select
-        onSelect={(value) => {
-          console.log(value);
-          setSelectedValue(value);
-        }}
+        onSelect={(value) => setSelectedValue(value)}
         ref={selectRef}
         value={selectValue}
         title="Select your province"

@@ -1,19 +1,40 @@
 import { StyleSheet, TouchableOpacity } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Avatar, Div, Icon, Skeleton, Text } from "react-native-magnus";
-import { auth, storage } from "../../../../firebaseInit";
+import { auth, db, storage } from "../../../../firebaseInit";
 import * as ImagePicker from "expo-image-picker";
 import { ref, uploadBytes } from "firebase/storage";
 import { User } from "firebase/auth";
 import { updateUserPhotoURL } from "../../../../firebaseUtils";
+import {
+  collection,
+  doc,
+  getDoc,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
 
 const ProfilePicture = () => {
-  const [userProfile, setUserProfile] = useState<string | null>(
-    auth.currentUser?.photoURL || ""
-  );
-
+  const [userProfile, setUserProfile] = useState<string | null>(null);
   const currentUser = auth.currentUser as User;
-  const storagePath = `${currentUser?.uid}/profile-image`;
+
+  const storagePath = `user-images/${currentUser?.uid}/profile-image`;
+
+  const getUserImage = async () => {
+    const userRef = doc(db, "users", currentUser.uid);
+    const userSnap = await getDoc(userRef);
+
+    if (userSnap.exists()) {
+      setUserProfile(userSnap.data().photoURL);
+    } else {
+      console.log("No such document!");
+    }
+  };
+
+  useEffect(() => {
+    getUserImage();
+  }, []);
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -56,15 +77,19 @@ const ProfilePicture = () => {
   return (
     <TouchableOpacity onPress={pickImage}>
       <Div>
-        <Avatar
-          mb={10}
-          bg="red300"
-          color="red800"
-          size={100}
-          source={{ uri: userProfile || "" }}
-        >
-          <Icon name="camera" fontFamily="Feather" color="black" />
-        </Avatar>
+        {userProfile ? (
+          <Avatar
+            mb={10}
+            bg="red300"
+            color="red800"
+            size={100}
+            source={{ uri: userProfile || "" }}
+          >
+            <Icon name="camera" fontFamily="Feather" color="black" />
+          </Avatar>
+        ) : (
+          <Skeleton.Circle h={100} w={100} />
+        )}
 
         <Icon
           style={styles.photoIcon}

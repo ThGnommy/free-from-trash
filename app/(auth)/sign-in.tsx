@@ -3,8 +3,6 @@ import {
   SafeAreaView,
   KeyboardAvoidingView,
   Platform,
-  TextInput,
-  Pressable,
   TouchableOpacity,
 } from "react-native";
 import React, { createRef, useState } from "react";
@@ -13,19 +11,19 @@ import { Button, Div, Icon, Input, Snackbar, Text } from "react-native-magnus";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth, db } from "../../firebaseInit";
 import BackgroundVideo from "./components/BackgroundVideo";
-import CitySelector from "./components/CitySelector";
-import { collection, doc, setDoc } from "firebase/firestore";
+import CitySelector from "../shared-components/CitySelector";
+import { doc, setDoc } from "firebase/firestore";
 
 const Signin = () => {
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [selectValue, setSelectedValue] = useState<string>("");
+  const [province, setProvince] = useState<string>("");
 
   const register = async (email: string, password: string) => {
     const placeholderAvatar =
-      "https://todaysmama.com/.image/t_share/MTU5OTA4ODA1NTYyNDEwMzU5/image-placeholder-title.jpg";
+      "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png";
 
     try {
       const userCredential = await createUserWithEmailAndPassword(
@@ -34,16 +32,16 @@ const Signin = () => {
         password
       );
 
-      await updateProfile(userCredential.user, {
-        displayName: name,
-        photoURL: placeholderAvatar,
-      }).catch((error) => {
-        throw new Error(error.message);
-      });
-
       const newUserRef = doc(db, "users", userCredential.user.uid);
 
-      await setDoc(newUserRef, { province: selectValue });
+      const userData = {
+        name: name,
+        email: email,
+        province: province,
+        photoURL: placeholderAvatar,
+      };
+
+      await setDoc(newUserRef, userData);
     } catch (error) {
       if (error instanceof Error) {
         snackbarRef.current.show(error.message);
@@ -103,10 +101,7 @@ const Signin = () => {
               </TouchableOpacity>
             }
           />
-          <CitySelector
-            selectValue={selectValue}
-            setSelectedValue={setSelectedValue}
-          />
+          <CitySelector selectValue={province} setSelectedValue={setProvince} />
           <Button
             onPress={() => register(email, password)}
             w={"100%"}

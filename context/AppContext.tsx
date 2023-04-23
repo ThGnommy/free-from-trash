@@ -25,6 +25,8 @@ interface IAppContext {
   removeSelectedImage: (idx: number) => void;
   updatePlaceList: (list: INewPlace[]) => void;
   resetNewPlace: () => void;
+  userProvince: string;
+  updateUserProvince: (prov: string) => void;
 }
 
 const defaultState: INewPlace = {
@@ -51,10 +53,6 @@ export function useApp() {
 }
 
 export const AppProvider = ({ children }: { children: React.ReactNode }) => {
-  const [newPlace, setNewPlace] = useState<INewPlace>(
-    defaultState as INewPlace
-  );
-
   const [placeList, setPlaceList] = useState<INewPlace[] | null>(null);
 
   // Handle Place List functions
@@ -62,6 +60,10 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   const updatePlaceList = (list: INewPlace[]) => {
     setPlaceList(list);
   };
+
+  const [newPlace, setNewPlace] = useState<INewPlace>(
+    defaultState as INewPlace
+  );
 
   // Handle new place functions
 
@@ -146,6 +148,12 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     setNewPlace(defaultState);
   };
 
+  const [userProvince, setUserProvince] = useState<string>("");
+
+  const updateUserProvince = (province: string) => {
+    setUserProvince(province);
+  };
+
   const values = {
     newPlace,
     setCreator,
@@ -159,6 +167,8 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     placeList,
     updatePlaceList,
     resetNewPlace,
+    userProvince,
+    updateUserProvince,
   };
 
   return <AppContext.Provider value={values}>{children}</AppContext.Provider>;

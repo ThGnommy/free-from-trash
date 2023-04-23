@@ -6,12 +6,12 @@ import { useApp } from "../../context/AppContext";
 import * as Location from "expo-location";
 
 const Map = () => {
-  const { placeList } = useApp();
+  const { placeList, userProvince } = useApp();
 
   const mapRef = useRef<MapView | null>(null);
 
   const goToUserRegion = async () => {
-    const region = await Location.geocodeAsync("Modena");
+    const region = await Location.geocodeAsync(userProvince);
 
     const coord = {
       latitude: region[0].latitude,

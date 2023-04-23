@@ -5,26 +5,52 @@ import { useAuth } from "../../context/Auth";
 import { Button, Div, Fab, Icon, ScrollDiv, Text } from "react-native-magnus";
 // import AddPlace from "./components/NewPlaceFormScreen/AddPlace";
 import { useRouter } from "expo-router";
-import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
-import { db } from "../../firebaseInit";
+import {
+  collection,
+  doc,
+  getDoc,
+  onSnapshot,
+  orderBy,
+  query,
+} from "firebase/firestore";
+import { auth, db } from "../../firebaseInit";
 import { INewPlace, useApp } from "../../context/AppContext";
 
 import PlaceList from "./components/HomeScreen/PlaceList";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export const Home = () => {
-  const { updatePlaceList, placeList } = useApp();
+  const { updatePlaceList, placeList, updateUserProvince } = useApp();
 
   const router = useRouter();
+
+  const currentUser = auth.currentUser;
+
+  const readUserProvince = async () => {
+    const docRef = doc(db, "users", currentUser?.uid!);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      console.log("Document data:", docSnap.data());
+      return docSnap.data().province;
+    } else {
+      // docSnap.data() will be undefined in this case
+      console.log("No such document!");
+    }
+  };
 
   useEffect(() => {
     const placeList = query(collection(db, "places"), orderBy("date", "desc"));
 
-    const unsubscribe = onSnapshot(placeList, (querySnapshot) => {
+    const unsubscribe = onSnapshot(placeList, async (querySnapshot) => {
       const temp: unknown[] = [];
 
+      const userCurrentProvince = await readUserProvince();
+
+      updateUserProvince(userCurrentProvince);
+
       querySnapshot.forEach((doc) => {
-        temp.push(doc.data());
+        if (doc.data().city === userCurrentProvince) temp.push(doc.data());
       });
 
       updatePlaceList(temp as INewPlace[]);
@@ -35,16 +61,14 @@ export const Home = () => {
 
   return (
     <>
-      {/* <ScrollDiv> */}
       <Div flex={1}>
-        {placeList !== undefined ? (
+        {placeList && placeList!.length > 0 ? (
           <PlaceList />
         ) : (
           <Text>No plase was found...</Text>
         )}
         {/* <StatusBar style={Platform.OS === "ios" ? "light" : "auto"} /> */}
       </Div>
-      {/* </ScrollDiv> */}
 
       <Fab bg="blue600" fontSize="xl">
         <Button
