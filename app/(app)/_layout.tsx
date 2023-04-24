@@ -60,7 +60,9 @@ const AppLayout = () => {
             </TouchableWithoutFeedback>
           ),
           headerRight: () => (
-            <TouchableWithoutFeedback onPress={() => {}}>
+            <TouchableWithoutFeedback
+              onPress={() => router.push("settings-edit-user")}
+            >
               <Icon
                 name="edit"
                 color="black"
@@ -71,6 +73,7 @@ const AppLayout = () => {
           ),
         }}
       />
+      <Stack.Screen name="settings-edit-user" options={{ title: "Edit" }} />
       <Stack.Screen
         name="map"
         options={{ title: "Map", headerBackTitle: "Home" }}

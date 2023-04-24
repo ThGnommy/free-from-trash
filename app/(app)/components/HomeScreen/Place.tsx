@@ -63,7 +63,6 @@ const Place = ({
         </Div>
       </Div>
 
-      {/* <Button w="100%">Show More</Button> */}
       <Div
         flexDir="row"
         justifyContent="space-between"

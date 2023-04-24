@@ -1,6 +1,7 @@
 import { StyleSheet } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import { Button, Select, Text } from "react-native-magnus";
+import { useApp } from "../../context/AppContext";
 
 const CitySelector = ({
   selectValue,
@@ -11,6 +12,8 @@ const CitySelector = ({
 }) => {
   const [cities, setCities] = useState<string[]>([]);
   const selectRef = React.useRef<any>();
+
+  const { updateUserProvince } = useApp();
 
   const URL_CITIES =
     "https://axqvoqvbfjpaamphztgd.functions.supabase.co/province?onlyname=true";
@@ -36,6 +39,11 @@ const CitySelector = ({
     selectRef.current?.open();
   };
 
+  const onSelectNewProvince = (value: string) => {
+    setSelectedValue(value);
+    updateUserProvince(value);
+  };
+
   return (
     <>
       <Button
@@ -47,7 +55,7 @@ const CitySelector = ({
       </Button>
 
       <Select
-        onSelect={(value) => setSelectedValue(value)}
+        onSelect={(value) => onSelectNewProvince(value)}
         ref={selectRef}
         value={selectValue}
         title="Select your province"

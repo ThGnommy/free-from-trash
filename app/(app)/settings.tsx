@@ -1,21 +1,11 @@
 import { StyleSheet } from "react-native";
-import React, { useEffect, useState } from "react";
-import {
-  Avatar,
-  Button,
-  Div,
-  Icon,
-  Input,
-  Skeleton,
-  Text,
-} from "react-native-magnus";
-import { User, updateProfile } from "firebase/auth";
+import React, { useCallback, useEffect, useState } from "react";
+import { Avatar, Button, Div, Icon, Skeleton, Text } from "react-native-magnus";
 import { useAuth } from "../../context/Auth";
 import { auth, db } from "../../firebaseInit";
-import ProfilePicture from "./components/SettingsScreen/ProfilePicture";
-import CitySelector from "../shared-components/CitySelector";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { useApp } from "../../context/AppContext";
+import { useFocusEffect } from "expo-router";
 
 const Settings = () => {
   const { signOut } = useAuth();
@@ -25,8 +15,7 @@ const Settings = () => {
   const currentUser = auth.currentUser;
 
   const [name, setName] = useState(currentUser?.displayName);
-  const [currentProvince, setCurrentProvince] = useState<string>(userProvince);
-  const [province, setProvince] = useState<string | undefined>(undefined);
+  // const [currentProvince, setCurrentProvince] = useState<string>(userProvince);
 
   const getUserInfo = async () => {
     const userRef = doc(db, "users", currentUser?.uid!);
@@ -39,37 +28,12 @@ const Settings = () => {
     }
   };
 
-  useEffect(() => {
-    getUserInfo();
-  }, []);
-
-  const updateUserProvinceInDB = async () => {
-    const userRef = doc(db, "users", currentUser?.uid!);
-
-    await updateDoc(userRef, {
-      province: province,
-    });
-  };
-
-  useEffect(() => {
-    if (province !== currentProvince && province) {
-      updateUserProvinceInDB();
-    }
-  }, [province]);
-
-  const updateUserName = async () => {
-    try {
-      const userRef = doc(db, "users", currentUser?.uid!);
-
-      await updateDoc(userRef, {
-        name: name,
-      });
-    } catch (error) {
-      if (error instanceof Error) {
-        throw new Error(error.message);
-      }
-    }
-  };
+  // get user info when the screen is focused
+  useFocusEffect(
+    useCallback(() => {
+      getUserInfo();
+    }, [])
+  );
 
   const SkeletonPlaceholder = () => (
     <Div flexDir="row" justifyContent="center" alignItems="center" w="90%">
@@ -92,8 +56,13 @@ const Settings = () => {
       <Text fontSize="4xl" py={10}>
         Your Profile
       </Text>
-      <ProfilePicture />
-      {name && currentProvince && currentUser?.email ? (
+      {currentUser?.photoURL ? (
+        <Avatar mb={10} size={100} source={{ uri: currentUser?.photoURL! }} />
+      ) : (
+        <Skeleton.Circle w={100} h={100} mb={10} />
+      )}
+
+      {name && userProvince && currentUser?.email ? (
         <>
           <Div
             bg="gray200"
@@ -132,7 +101,7 @@ const Settings = () => {
             alignItems="center"
           >
             <Text>Province</Text>
-            <Text>{currentProvince}</Text>
+            <Text>{userProvince}</Text>
           </Div>
         </>
       ) : (

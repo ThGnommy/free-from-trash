@@ -16,25 +16,27 @@ import {
 } from "firebase/firestore";
 
 const ProfilePicture = () => {
-  const [userProfile, setUserProfile] = useState<string | null>(null);
   const currentUser = auth.currentUser as User;
+  const [userProfile, setUserProfile] = useState<string | null>(
+    currentUser.photoURL
+  );
 
   const storagePath = `user-images/${currentUser?.uid}/profile-image`;
 
-  const getUserImage = async () => {
-    const userRef = doc(db, "users", currentUser.uid);
-    const userSnap = await getDoc(userRef);
+  // const getUserImage = async () => {
+  //   const userRef = doc(db, "users", currentUser.uid);
+  //   const userSnap = await getDoc(userRef);
 
-    if (userSnap.exists()) {
-      setUserProfile(userSnap.data().photoURL);
-    } else {
-      console.log("No such document!");
-    }
-  };
+  //   if (userSnap.exists()) {
+  //     setUserProfile(userSnap.data().photoURL);
+  //   } else {
+  //     console.log("No such document!");
+  //   }
+  // };
 
-  useEffect(() => {
-    getUserImage();
-  }, []);
+  // useEffect(() => {
+  //   getUserImage();
+  // }, []);
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -69,7 +71,10 @@ const ProfilePicture = () => {
     // 'file' comes from the Blob or File API
     await uploadBytes(storageRef, blob).then(async (snapshot) => {
       console.log("Uploaded a blob or file!");
-      await updateUserPhotoURL(currentUser, storagePath);
+
+      const userRef = doc(db, "users", currentUser.uid);
+
+      await updateUserPhotoURL(currentUser, storagePath, userRef);
       setUserProfile(currentUser.photoURL);
     });
   };
