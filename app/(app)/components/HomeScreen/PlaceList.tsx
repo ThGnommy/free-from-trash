@@ -18,6 +18,7 @@ const PlaceList = () => {
           street={item.street}
           city={item.city}
           description={item.description}
+          id={item.id}
         />
       )}
     />

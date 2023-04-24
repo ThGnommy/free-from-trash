@@ -9,6 +9,7 @@ export interface INewPlace {
   previewMapImage: string;
   street: string;
   city: string;
+  id?: string;
   description?: string;
 }
 
@@ -39,6 +40,7 @@ const defaultState: INewPlace = {
   previewMapImage: "",
   street: "",
   city: "",
+  id: "",
   description: "",
 };
 

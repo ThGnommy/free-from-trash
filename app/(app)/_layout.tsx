@@ -87,6 +87,7 @@ const AppLayout = () => {
         options={{ title: "Place Review" }}
       />
       <Stack.Screen name="camera" options={{ headerShown: false }} />
+      <Stack.Screen name="[place]" options={{ title: "Place" }} />
     </Stack>
   );
 };

@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Button, Div, Image, ScrollDiv, Text } from "react-native-magnus";
-import { db, storage } from "../../firebaseInit";
+import { auth, db, storage } from "../../firebaseInit";
 import { useApp } from "../../context/AppContext";
 import {
   Timestamp,
@@ -17,6 +17,8 @@ import { useRouter } from "expo-router";
 
 const NewPlaceConfirmation = () => {
   const router = useRouter();
+
+  const currentUser = auth.currentUser;
 
   const { newPlace, resetNewPlace } = useApp();
 
@@ -72,8 +74,14 @@ const NewPlaceConfirmation = () => {
   const writeNewPlaceInDB = async () => {
     setLoading(true);
 
+    const newPlaceRef = doc(collection(db, "places"));
+
     const place = {
-      creatorUID: newPlace.creatorUID,
+      userCreator: {
+        name: currentUser?.displayName,
+        photoURL: currentUser?.photoURL,
+        id: currentUser?.uid,
+      },
       coordinate: newPlace.coordinate,
       previewMapImage: newPlace.previewMapImage,
       street: newPlace.street,
@@ -81,9 +89,9 @@ const NewPlaceConfirmation = () => {
       description: newPlace.description,
       placeImages: [],
       date: Timestamp.now(),
+      id: newPlaceRef.id,
+      userJoined: [],
     };
-
-    const newPlaceRef = doc(collection(db, "places"));
 
     try {
       await setDoc(newPlaceRef, place);
