@@ -12,6 +12,7 @@ const Place = ({
   street,
   city,
   id,
+  userJoined,
   description,
 }: INewPlace) => {
   const [name, setName] = useState<string>("");

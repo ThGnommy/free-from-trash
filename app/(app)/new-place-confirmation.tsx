@@ -77,11 +77,7 @@ const NewPlaceConfirmation = () => {
     const newPlaceRef = doc(collection(db, "places"));
 
     const place = {
-      userCreator: {
-        name: currentUser?.displayName,
-        photoURL: currentUser?.photoURL,
-        id: currentUser?.uid,
-      },
+      creatorUID: currentUser?.uid,
       coordinate: newPlace.coordinate,
       previewMapImage: newPlace.previewMapImage,
       street: newPlace.street,

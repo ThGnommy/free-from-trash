@@ -9,6 +9,7 @@ export interface INewPlace {
   previewMapImage: string;
   street: string;
   city: string;
+  userJoined: string[];
   id?: string;
   description?: string;
 }
@@ -41,6 +42,7 @@ const defaultState: INewPlace = {
   street: "",
   city: "",
   id: "",
+  userJoined: [],
   description: "",
 };
 

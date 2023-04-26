@@ -19,6 +19,7 @@ const PlaceList = () => {
           city={item.city}
           description={item.description}
           id={item.id}
+          userJoined={item.userJoined}
         />
       )}
     />
