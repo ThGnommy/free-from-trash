@@ -61,15 +61,16 @@ export const Home = () => {
 
   return (
     <>
-      <Div flex={1}>
-        {placeList && placeList!.length > 0 ? (
-          <PlaceList />
-        ) : (
-          <Text>No plase was found...</Text>
-        )}
-        {/* <StatusBar style={Platform.OS === "ios" ? "light" : "auto"} /> */}
-      </Div>
-
+      <SafeAreaView edges={["bottom"]} style={{ flex: 1 }}>
+        <Div flex={1}>
+          {placeList && placeList!.length > 0 ? (
+            <PlaceList />
+          ) : (
+            <Text>No plase was found...</Text>
+          )}
+          {/* <StatusBar style={Platform.OS === "ios" ? "light" : "auto"} /> */}
+        </Div>
+      </SafeAreaView>
       <Fab bg="blue600" fontSize="xl">
         <Button
           p="none"

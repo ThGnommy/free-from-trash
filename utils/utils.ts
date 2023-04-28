@@ -1,18 +1,13 @@
-export const convertUidParamToArray = (str: string) => {
-  const result = [];
-  const comma = ",";
-  let id = "";
+import { SaveFormat, manipulateAsync } from "expo-image-manipulator";
 
-  for (let i = 0; i <= str.length; i++) {
-    if (str[i] === comma) {
-      result.push(id);
-      id = "";
-    } else if (i === str.length) {
-      result.push(id);
-    } else {
-      id += str[i];
-    }
-  }
-
-  return result;
+export const compressImage = async (url: string) => {
+  const compressedImage = await manipulateAsync(url, [], {
+    compress: 0.5,
+    format: SaveFormat.PNG,
+  });
+  console.log(compressImage);
+  return compressedImage.uri;
 };
+
+export const containAStringElement = (array: string[]) =>
+  array.some((element) => typeof element === "string");

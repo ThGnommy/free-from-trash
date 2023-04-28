@@ -7,6 +7,9 @@
     "icon": "./assets/images/icon.png",
     "scheme": "free-of-trash",
     "userInterfaceStyle": "automatic",
+    "eas": {
+      "projectId": "f9c1d170-5fcb-4b2f-b0f5-37b0e9c8f6b6"
+    },
     "splash": {
       "image": "./assets/images/splash.png",
       "resizeMode": "contain",
@@ -16,6 +19,7 @@
     "ios": {
       "supportsTablet": true
     },
+    "owner": "gnommy",
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",

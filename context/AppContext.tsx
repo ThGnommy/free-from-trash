@@ -1,6 +1,6 @@
 import { createContext, useContext, useState } from "react";
 import { LatLng } from "react-native-maps";
-import { ICreator } from "./types";
+import { ICreator, ICreatorInfo } from "./types";
 
 export interface INewPlace {
   creatorUID: string;
@@ -10,6 +10,7 @@ export interface INewPlace {
   street: string;
   city: string;
   userJoined: string[];
+  creatorInfo: ICreatorInfo;
   id?: string;
   description?: string;
 }
@@ -42,6 +43,10 @@ const defaultState: INewPlace = {
   street: "",
   city: "",
   id: "",
+  creatorInfo: {
+    name: "",
+    photoURL: "",
+  },
   userJoined: [],
   description: "",
 };

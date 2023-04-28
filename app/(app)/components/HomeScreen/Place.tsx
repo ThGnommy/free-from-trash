@@ -34,23 +34,6 @@ const Place = ({
     getPlaceInfo();
   }, []);
 
-  // const SkeletonPlaceholder = () => (
-  //   <Div>
-  //     <Skeleton.Box h={150} rounded="md" p={10} />
-  //     <Div
-  //       flexDir="row"
-  //       justifyContent="flex-start"
-  //       alignItems="center"
-  //       my={10}
-  //     >
-  //       <Skeleton.Circle w={40} h={40} mr={10} />
-  //       <Div w="50%">
-  //         <Skeleton.Box h={20} rounded="md" />
-  //       </Div>
-  //     </Div>
-  //   </Div>
-  // );
-
   return (
     <Div shadow="sm" m={10} p={10} rounded="md" bg="white">
       {placeImages && (

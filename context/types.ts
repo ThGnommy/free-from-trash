@@ -5,3 +5,8 @@ export interface ICreator {
   photoURL: string;
   uid: string;
 }
+
+export interface ICreatorInfo {
+  name: string;
+  photoURL: string;
+}

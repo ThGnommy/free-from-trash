@@ -1,34 +1,47 @@
 import { StyleSheet } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
-import { useSearchParams } from "expo-router";
+import { useRouter, useSearchParams } from "expo-router";
 import { INewPlace } from "../../context/AppContext";
-import { arrayUnion, doc, getDoc, updateDoc } from "firebase/firestore";
-import { auth, db } from "../../firebaseInit";
+import {
+  arrayRemove,
+  arrayUnion,
+  deleteDoc,
+  doc,
+  getDoc,
+  updateDoc,
+} from "firebase/firestore";
+import { auth, db, storage } from "../../firebaseInit";
 import {
   Avatar,
   Button,
   Div,
   Image,
+  Modal,
   ScrollDiv,
   Text,
 } from "react-native-magnus";
 import { ICreator } from "../../context/types";
 import MapView, { Marker, Region } from "react-native-maps";
-import { convertUidParamToArray } from "../../utils/utils";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { containAStringElement } from "../../utils/utils";
+import { ref, listAll, deleteObject } from "firebase/storage";
 
 const PlaceScreen = () => {
   const { placeId, creatorUID } = useSearchParams();
 
-  // convert the string parameter into an array
-  // const userJoinedArray = convertUidParamToArray(userJoined as string);
-
   const [place, setPlace] = useState<INewPlace>();
   const [user, setUser] = useState<ICreator>();
-  const [userJoinedPhoto, setUserJoinedPhoto] = useState<
-    string[] | undefined
-  >();
+  const [userJoinedPhoto, setUserJoinedPhoto] = useState<string[]>([]);
+
+  const [deleteModal, setDeleteModal] = useState<boolean>(false);
 
   const currentUser = auth.currentUser;
+
+  const router = useRouter();
+
+  const userAlreadyJoined = userJoinedPhoto?.includes(
+    currentUser?.photoURL as string
+  );
 
   const getPlaceInfo = async () => {
     const docRef = doc(db, "places", placeId as string);
@@ -67,12 +80,6 @@ const PlaceScreen = () => {
   };
 
   const handleJoined = useCallback(async () => {
-    if (
-      userJoinedPhoto &&
-      userJoinedPhoto.includes(currentUser?.photoURL as string)
-    )
-      return;
-
     const currentUserPhoto: string = currentUser!.photoURL!;
 
     const placeRef = doc(db, "places", placeId as string);
@@ -86,12 +93,48 @@ const PlaceScreen = () => {
 
     if (docSnap.exists()) {
       await updateDoc(placeRef, {
-        userJoined: arrayUnion(docSnap.data().photoURL),
+        userJoined: userAlreadyJoined
+          ? arrayRemove(docSnap.data().photoURL)
+          : arrayUnion(docSnap.data().photoURL),
       });
+
+      if (userAlreadyJoined) {
+        setUserJoinedPhoto((prev) =>
+          prev?.filter((photo) => photo !== docSnap.data().photoURL)
+        );
+      }
     } else {
       console.log("No such document!");
     }
   }, [userJoinedPhoto]);
+
+  const handleDeletePlace = async () => {
+    await deleteDoc(doc(db, "places", placeId as string));
+    await deleteAllPlaceImages();
+    router.back();
+  };
+
+  const deleteAllPlaceImages = async () => {
+    // Create a reference under which you want to list
+    const listRef = ref(storage, `places/${placeId as string}`);
+
+    // Find all the prefixes and items.
+    await listAll(listRef)
+      .then((res) => {
+        res.items.forEach(async (itemRef) => {
+          await deleteObject(itemRef);
+          try {
+          } catch (error) {
+            if (error instanceof Error) {
+              throw new Error(error.message);
+            }
+          }
+        });
+      })
+      .catch((error) => {
+        // Uh-oh, an error occurred!
+      });
+  };
 
   useEffect(() => {
     getPlaceInfo();
@@ -100,65 +143,117 @@ const PlaceScreen = () => {
   }, []);
 
   return (
-    <ScrollDiv flex={1}>
-      <Avatar size={50} source={{ uri: user?.photoURL }} />
-      <Text>{user?.name}'s Place</Text>
-      {place?.placeImages.map((image, idx) => (
-        <Image
-          key={idx}
-          alignSelf="center"
-          h={200}
-          w="90%"
-          rounded="lg"
-          source={{
-            uri:
-              image ||
-              "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541",
-          }}
-        />
-      ))}
-      <Text fontSize="4xl" fontWeight="bold">
-        Description
-      </Text>
-      <Text>{place?.description}</Text>
-      <Div alignItems="center" pointerEvents="none" shadow="sm">
-        <MapView
-          region={place?.coordinate as Region}
-          maxZoomLevel={16}
-          provider="google"
-          style={styles.map}
-        >
-          <Marker coordinate={place?.coordinate!} />
-        </MapView>
-      </Div>
-      <Div>
-        <Text fontSize="4xl" fontWeight="bold">
-          Helpers
-        </Text>
-        <Div row>
-          {userJoinedPhoto ? (
-            userJoinedPhoto.map((userPhoto, idx) => (
-              <Avatar
-                shadow={1}
-                key={idx}
-                size={50}
-                m={5}
-                source={{
-                  uri:
-                    userPhoto ||
-                    "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541",
-                }}
-              />
-            ))
-          ) : (
-            <Text>None.</Text>
-          )}
+    <SafeAreaView edges={["bottom"]} style={{ backgroundColor: "white" }}>
+      <ScrollDiv px={20}>
+        <Div mt={10}>
+          <Avatar size={50} source={{ uri: user?.photoURL }} />
+          <Text fontSize="4xl" fontWeight="bold">
+            {user?.name}'s Place
+          </Text>
         </Div>
-      </Div>
-      {!userJoinedPhoto?.includes(currentUser?.photoURL!) && (
-        <Button onPress={handleJoined}>Join</Button>
-      )}
-    </ScrollDiv>
+        <Text my={10} fontSize="3xl" fontWeight="bold">
+          Place Images
+        </Text>
+        <Div
+          flexDir="column"
+          justifyContent="center"
+          alignItems="center"
+          style={{ gap: 10 }}
+        >
+          {place?.placeImages.map((image, idx) => (
+            <Image
+              key={idx}
+              alignSelf="center"
+              h={200}
+              w="100%"
+              rounded="lg"
+              source={{
+                uri:
+                  image ||
+                  "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541",
+              }}
+            />
+          ))}
+        </Div>
+        <Text my={10} fontSize="3xl" fontWeight="bold">
+          Description
+        </Text>
+        <Text mb={10}>{place?.description}</Text>
+        <Text mb={10} fontSize="3xl" fontWeight="bold">
+          Location
+        </Text>
+        <Div mb={10} alignItems="center" pointerEvents="none" shadow="sm">
+          <MapView
+            region={place?.coordinate as Region}
+            maxZoomLevel={16}
+            provider="google"
+            style={styles.map}
+          >
+            <Marker coordinate={place?.coordinate!} />
+          </MapView>
+        </Div>
+        <Div>
+          <Text fontSize="3xl" fontWeight="bold">
+            Helpers
+          </Text>
+          <Div row style={{ gap: 10 }}>
+            {containAStringElement(userJoinedPhoto) ? (
+              userJoinedPhoto?.map((userPhoto, idx) => (
+                <Avatar
+                  shadow={1}
+                  key={idx}
+                  size={50}
+                  my={5}
+                  source={{
+                    uri:
+                      userPhoto ||
+                      "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541",
+                  }}
+                />
+              ))
+            ) : (
+              <Text>None.</Text>
+            )}
+          </Div>
+        </Div>
+        {creatorUID !== currentUser?.uid && (
+          <Button
+            bg={userAlreadyJoined ? "red600" : "blue600"}
+            mt={10}
+            onPress={handleJoined}
+          >
+            {!userAlreadyJoined ? "Join" : "Leave"}
+          </Button>
+        )}
+        <Button
+          w="100%"
+          bg="red700"
+          mt={10}
+          onPress={() => setDeleteModal(true)}
+        >
+          Delete Place
+        </Button>
+        <Modal isVisible={deleteModal}>
+          <Div flex={1} justifyContent="center" alignItems="center">
+            <Text fontSize="5xl" fontWeight="bold" mb={20}>
+              Are you sure you want to delete this place?
+            </Text>
+            <Div row style={{ gap: 20 }}>
+              <Button w={100} bg="green600" onPress={handleDeletePlace}>
+                Yes
+              </Button>
+              <Button
+                bg="gray900"
+                w={100}
+                onPress={() => setDeleteModal(false)}
+              >
+                Close
+              </Button>
+            </Div>
+          </Div>
+        </Modal>
+      </ScrollDiv>
+    </SafeAreaView>
   );
 };
 
@@ -167,7 +262,7 @@ export default PlaceScreen;
 const styles = StyleSheet.create({
   map: {
     alignSelf: "center",
-    width: "90%",
+    width: "100%",
     height: 200,
     borderRadius: 16,
     overflow: "hidden",

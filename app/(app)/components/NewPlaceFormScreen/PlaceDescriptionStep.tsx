@@ -1,4 +1,4 @@
-import { StyleSheet, TextInput } from "react-native";
+import { KeyboardAvoidingView, StyleSheet, TextInput } from "react-native";
 import React, { useState } from "react";
 import { Div, Text } from "react-native-magnus";
 import { useApp } from "../../../../context/AppContext";

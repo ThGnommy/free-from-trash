@@ -23,28 +23,13 @@ const ProfilePicture = () => {
 
   const storagePath = `user-images/${currentUser?.uid}/profile-image`;
 
-  // const getUserImage = async () => {
-  //   const userRef = doc(db, "users", currentUser.uid);
-  //   const userSnap = await getDoc(userRef);
-
-  //   if (userSnap.exists()) {
-  //     setUserProfile(userSnap.data().photoURL);
-  //   } else {
-  //     console.log("No such document!");
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   getUserImage();
-  // }, []);
-
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
       aspect: [4, 3],
-      quality: 0.5,
+      quality: 0.2,
     });
 
     if (!result.canceled) {

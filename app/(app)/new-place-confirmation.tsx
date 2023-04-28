@@ -78,6 +78,10 @@ const NewPlaceConfirmation = () => {
 
     const place = {
       creatorUID: currentUser?.uid,
+      creatorInfo: {
+        name: currentUser?.displayName,
+        photoURL: currentUser?.photoURL,
+      },
       coordinate: newPlace.coordinate,
       previewMapImage: newPlace.previewMapImage,
       street: newPlace.street,

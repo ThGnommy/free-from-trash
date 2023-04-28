@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { KeyboardAvoidingView, StyleSheet } from "react-native";
 import React, { useEffect, useRef } from "react";
 import { ScrollDiv, Div, Button, Snackbar } from "react-native-magnus";
 import ImagePickerStep from "./components/NewPlaceFormScreen/ImagePickerStep";
@@ -39,17 +39,19 @@ const AddNewPlaceForm = () => {
 
   return (
     <ActionSheetProvider>
-      <ScrollDiv flex={1} style={styles.screen}>
-        <Div justifyContent="flex-start" alignItems="center" w="100%">
-          <ImagePickerStep />
-          <MapPickerStep />
-          <PlaceDescriptionStep />
-          <Button onPress={goToConfirmationScreen} alignSelf="center" mb={25}>
-            Preview
-          </Button>
-          <Snackbar ref={snackbarRef} bg="red700" color="white" />
-        </Div>
-      </ScrollDiv>
+      <KeyboardAvoidingView behavior={"position"}>
+        <ScrollDiv style={styles.screen}>
+          <Div justifyContent="flex-start" alignItems="center" w="100%">
+            <ImagePickerStep />
+            <MapPickerStep />
+            <PlaceDescriptionStep />
+            <Button onPress={goToConfirmationScreen} alignSelf="center" mb={25}>
+              Preview
+            </Button>
+          </Div>
+        </ScrollDiv>
+        <Snackbar ref={snackbarRef} bg="red700" color="white" />
+      </KeyboardAvoidingView>
     </ActionSheetProvider>
   );
 };
