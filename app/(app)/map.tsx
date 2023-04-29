@@ -37,6 +37,7 @@ const Map = () => {
         style={styles.map}
         zoomControlEnabled={true}
         onCalloutPress={() => console.log("press?")}
+        showsUserLocation={true}
       >
         {placeList?.map((place) => (
           <Marker
