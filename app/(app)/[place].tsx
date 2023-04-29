@@ -178,7 +178,9 @@ const PlaceScreen = () => {
         <Text my={10} fontSize="3xl" fontWeight="bold">
           Description
         </Text>
-        <Text mb={10}>{place?.description}</Text>
+        <Text mb={10}>
+          {place?.description ? place.description : "No description."}
+        </Text>
         <Text mb={10} fontSize="3xl" fontWeight="bold">
           Location
         </Text>

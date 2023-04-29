@@ -1,14 +1,11 @@
 import {
-  Pressable,
   StyleSheet,
-  Text,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  View,
 } from "react-native";
 import React from "react";
 import { Stack, useRouter } from "expo-router";
-import { Icon } from "react-native-magnus";
+import { Div, Icon } from "react-native-magnus";
 
 export const unstable_settings = {
   initialRouteName: "index",
@@ -34,14 +31,26 @@ const AppLayout = () => {
             </TouchableOpacity>
           ),
           headerRight: () => (
-            <TouchableOpacity onPress={() => router.push("map")}>
-              <Icon
-                name="map-marked-alt"
-                color="black"
-                fontFamily="FontAwesome5"
-                fontSize={24}
-              />
-            </TouchableOpacity>
+            <Div row style={{ gap: 10 }}>
+              <TouchableWithoutFeedback
+                onPress={() => router.push("leaderboard")}
+              >
+                <Icon
+                  name="leaderboard"
+                  color="black"
+                  fontFamily="MaterialIcons"
+                  fontSize={24}
+                />
+              </TouchableWithoutFeedback>
+              <TouchableOpacity onPress={() => router.push("map")}>
+                <Icon
+                  name="map-marked-alt"
+                  color="black"
+                  fontFamily="FontAwesome5"
+                  fontSize={24}
+                />
+              </TouchableOpacity>
+            </Div>
           ),
         }}
       />
@@ -88,6 +97,7 @@ const AppLayout = () => {
       />
       <Stack.Screen name="camera" options={{ headerShown: false }} />
       <Stack.Screen name="[place]" options={{ title: "Place" }} />
+      <Stack.Screen name="leaderboard" options={{ title: "Leaderboard" }} />
     </Stack>
   );
 };

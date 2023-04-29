@@ -13,6 +13,7 @@ import { auth, db } from "../../firebaseInit";
 import BackgroundVideo from "./components/BackgroundVideo";
 import CitySelector from "../shared-components/CitySelector";
 import { doc, setDoc } from "firebase/firestore";
+import { ICreator } from "../../context/types";
 
 const Signin = () => {
   const [name, setName] = useState<string>("");
@@ -34,12 +35,13 @@ const Signin = () => {
 
       const newUserRef = doc(db, "users", userCredential.user.uid);
 
-      const userData = {
+      const userData: ICreator = {
         name: name,
         email: email,
         province: province,
         photoURL: placeholderAvatar,
         uid: userCredential.user.uid,
+        score: 0,
       };
 
       await setDoc(newUserRef, userData);

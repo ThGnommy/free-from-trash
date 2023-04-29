@@ -148,10 +148,6 @@ const NewPlaceConfirmation = () => {
           <Text fontSize="2xl">No description.</Text>
         )}
       </Div>
-      <Text>
-        Location: {newPlace.coordinate.latitude},{" "}
-        {newPlace.coordinate.longitude}
-      </Text>
       <Button
         loading={loading}
         onPress={writeNewPlaceInDB}

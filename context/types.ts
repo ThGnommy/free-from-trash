@@ -4,6 +4,7 @@ export interface ICreator {
   province: string;
   photoURL: string;
   uid: string;
+  score: number;
 }
 
 export interface ICreatorInfo {
