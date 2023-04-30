@@ -4,7 +4,7 @@ import {
   useWindowDimensions,
 } from "react-native";
 import React, { useRef, useState } from "react";
-import { Camera as ExpoCamera, CameraType } from "expo-camera";
+import { Camera as ExpoCamera, CameraType, FlashMode } from "expo-camera";
 import { Div, Icon, Image } from "react-native-magnus";
 import { useRouter, useSearchParams } from "expo-router";
 import { useApp } from "../../context/AppContext";
@@ -21,6 +21,7 @@ const Camera = () => {
   const params = useSearchParams();
 
   const [type, setType] = useState(CameraType.back);
+  const [flash, setFlash] = useState(FlashMode.off);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
 
   const cameraRef = useRef<any>();
@@ -36,6 +37,12 @@ const Camera = () => {
     setPreviewImage(photo.uri);
   };
 
+  const toggleFlash = async () => {
+    setFlash((current) =>
+      current === FlashMode.off ? FlashMode.on : FlashMode.off
+    );
+  };
+
   const confirmPhoto = () => {
     setSingleNewImages(Number(params.index), previewImage!);
     router.back();
@@ -49,7 +56,12 @@ const Camera = () => {
   return (
     <Div w={deviceWidth} h={deviceHeight}>
       {!previewImage ? (
-        <ExpoCamera ref={cameraRef} style={styles.camera} type={type}>
+        <ExpoCamera
+          ref={cameraRef}
+          style={styles.camera}
+          flashMode={flash}
+          type={type}
+        >
           <TouchableOpacity
             style={styles.closeIcon}
             onPress={() => router.back()}
@@ -60,6 +72,23 @@ const Camera = () => {
               fontSize={40}
               color="white"
             />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.flashIcon} onPress={toggleFlash}>
+            {flash === FlashMode.off ? (
+              <Icon
+                name="flash-sharp"
+                fontFamily="Ionicons"
+                fontSize={40}
+                color="white"
+              />
+            ) : (
+              <Icon
+                name="flash-off-sharp"
+                fontFamily="Ionicons"
+                fontSize={40}
+                color="white"
+              />
+            )}
           </TouchableOpacity>
           <TouchableOpacity onPress={toggleCameraType} style={styles.flipIcon}>
             <Icon
@@ -124,6 +153,7 @@ export default Camera;
 
 const styles = StyleSheet.create({
   camera: {
+    width: "100%",
     height: "100%",
   },
   closeIcon: {
@@ -139,5 +169,10 @@ const styles = StyleSheet.create({
   photoIcon: {
     position: "absolute",
     bottom: 40,
+  },
+  flashIcon: {
+    position: "absolute",
+    right: 20,
+    top: 40,
   },
 });

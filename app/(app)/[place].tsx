@@ -175,7 +175,10 @@ const PlaceScreen = () => {
   }, []);
 
   return (
-    <SafeAreaView edges={["bottom"]} style={{ backgroundColor: "white" }}>
+    <SafeAreaView
+      edges={["bottom"]}
+      style={{ height: "100%", backgroundColor: "white" }}
+    >
       <ScrollDiv px={20}>
         <Div mt={10}>
           <Avatar size={50} source={{ uri: user?.photoURL }} />

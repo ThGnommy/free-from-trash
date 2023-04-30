@@ -79,7 +79,6 @@ const Signin = () => {
           alignItems="center"
         >
           <Input
-            style={styles.input}
             borderWidth={2}
             value={name}
             onChangeText={(text) => setName(text)}
@@ -87,7 +86,6 @@ const Signin = () => {
             focusBorderColor="yellow500"
           />
           <Input
-            style={styles.input}
             keyboardType="email-address"
             value={email}
             onChangeText={(text) => setEmail(text)}
@@ -154,8 +152,5 @@ const styles = StyleSheet.create({
   },
   login: {
     fontWeight: "700",
-  },
-  input: {
-    // backgroundColor: "transparent",
   },
 });

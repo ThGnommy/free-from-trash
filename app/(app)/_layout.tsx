@@ -34,16 +34,14 @@ const AppLayout = () => {
           ),
           headerRight: () => (
             <Div row style={{ gap: 10 }}>
-              <TouchableWithoutFeedback
-                onPress={() => router.push("leaderboard")}
-              >
+              <TouchableOpacity onPress={() => router.push("leaderboard")}>
                 <Icon
                   name="leaderboard"
                   color="blue500"
                   fontFamily="MaterialIcons"
                   fontSize={24}
                 />
-              </TouchableWithoutFeedback>
+              </TouchableOpacity>
               <TouchableOpacity onPress={() => router.push("map")}>
                 <Icon
                   name="map-marked-alt"
@@ -60,27 +58,15 @@ const AppLayout = () => {
         name="settings"
         options={{
           title: "Settings",
-          headerLeft: () => (
-            <TouchableWithoutFeedback onPress={() => router.back()}>
-              <Icon
-                name="arrow-left"
-                color="black"
-                fontFamily="Feather"
-                fontSize={24}
-              />
-            </TouchableWithoutFeedback>
-          ),
           headerRight: () => (
-            <TouchableWithoutFeedback
-              onPress={() => router.push("settings-edit-user")}
-            >
+            <TouchableOpacity onPress={() => router.push("settings-edit-user")}>
               <Icon
                 name="edit"
                 color="black"
                 fontFamily="Feather"
                 fontSize={24}
               />
-            </TouchableWithoutFeedback>
+            </TouchableOpacity>
           ),
         }}
       />

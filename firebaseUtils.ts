@@ -23,27 +23,6 @@ export const updateUserPhotoURL = async (
   }
 };
 
-// export const setImagesFromStorage = async (id: string): Promise<void> => {
-//   // Create a reference under which you want to list
-//   const listRef = ref(storage, id);
-
-//   // Find all the prefixes and items.
-//   listAll(listRef)
-//     .then((res) => {
-//       res.prefixes.forEach((folderRef) => {
-//         // All the prefixes under listRef.
-//         // You may call listAll() recursively on them.
-//       });
-//       res.items.forEach((itemRef) => {
-//         // All the items under listRef.
-//         console.log(itemRef.fullPath);
-//       });
-//     })
-//     .catch((error) => {
-//       // Uh-oh, an error occurred!
-//     });
-// };
-
 export const readUserProvince = async (currentUser: User) => {
   const docRef = doc(db, "users", currentUser?.uid!);
   const docSnap = await getDoc(docRef);
