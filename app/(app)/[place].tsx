@@ -227,15 +227,17 @@ const PlaceScreen = () => {
             {!userAlreadyJoined ? "Join" : "Leave"}
           </Button>
         )}
-        <Button
-          w="100%"
-          bg="red700"
-          mt={10}
-          onPress={() => setDeleteModal(true)}
-        >
-          Delete Place
-        </Button>
-        <Modal isVisible={deleteModal}>
+        {creatorUID === currentUser?.uid && (
+          <Button
+            w="100%"
+            bg="red700"
+            mt={10}
+            onPress={() => setDeleteModal(true)}
+          >
+            Delete Place
+          </Button>
+        )}
+        <Modal isVisible={deleteModal} p={10}>
           <Div flex={1} justifyContent="center" alignItems="center">
             <Text fontSize="5xl" fontWeight="bold" mb={20}>
               Are you sure you want to delete this place?
@@ -253,6 +255,55 @@ const PlaceScreen = () => {
               </Button>
             </Div>
           </Div>
+          <Text fontSize="3xl" textAlign="center" mb={10}>
+            By cleaning this place
+          </Text>
+          <Div
+            p={10}
+            alignItems="center"
+            w="100%"
+            shadow="sm"
+            rounded="md"
+            bg="green200"
+          >
+            <Div
+              row
+              justifyContent="center"
+              alignItems="center"
+              style={{ gap: 10 }}
+            >
+              <Avatar size={40} source={{ uri: user?.photoURL }} />
+              <Text fontSize="xl">You'll earn 10 points!</Text>
+            </Div>
+          </Div>
+
+          <>
+            {userJoinedPhoto.length > 0 && (
+              <Div
+                p={10}
+                mt={10}
+                alignItems="center"
+                w="100%"
+                shadow="sm"
+                rounded="md"
+                bg="green100"
+              >
+                <Text fontSize="2xl" textAlign="center" mb={10}>
+                  Your helpers will earn 5 points!
+                </Text>
+                <Div
+                  row
+                  justifyContent="center"
+                  alignItems="center"
+                  style={{ gap: 10 }}
+                >
+                  {userJoinedPhoto.map((userJoined) => (
+                    <Avatar size={40} source={{ uri: userJoined }} />
+                  ))}
+                </Div>
+              </Div>
+            )}
+          </>
         </Modal>
       </ScrollDiv>
     </SafeAreaView>

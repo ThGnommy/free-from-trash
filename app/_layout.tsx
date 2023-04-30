@@ -1,13 +1,10 @@
-import { ThemeProvider, ThemeType } from "react-native-magnus";
+import { ThemeProvider } from "react-native-magnus";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { DarkTheme, DefaultTheme } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import { Slot, SplashScreen } from "expo-router";
 import { useEffect } from "react";
 import { useColorScheme } from "react-native";
 import { AuthProvider, useAuth } from "../context/Auth";
-import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "../firebaseInit";
 import { AppProvider } from "../context/AppContext";
 
 export {

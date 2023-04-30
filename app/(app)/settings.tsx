@@ -111,13 +111,13 @@ const Settings = () => {
         bg="red"
         my={10}
         alignSelf="center"
-        fontSize={20}
+        fontSize="2xl"
         prefix={
           <Icon
             name="log-out"
             color="white"
             fontFamily="Feather"
-            fontSize={20}
+            fontSize="2xl"
             pr={10}
           />
         }

@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import React, { createRef, useState } from "react";
-import { Link, useRouter, useSegments } from "expo-router";
+import { Link } from "expo-router";
 import { Button, Div, Icon, Input, Snackbar, Text } from "react-native-magnus";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth, db } from "../../firebaseInit";
@@ -14,6 +14,7 @@ import BackgroundVideo from "./components/BackgroundVideo";
 import CitySelector from "../shared-components/CitySelector";
 import { doc, setDoc } from "firebase/firestore";
 import { ICreator } from "../../context/types";
+import { StatusBar } from "expo-status-bar";
 
 const Signin = () => {
   const [name, setName] = useState<string>("");
@@ -113,9 +114,9 @@ const Signin = () => {
           <Button
             onPress={() => register(email, password)}
             w={"100%"}
-            bg="white"
+            bg="green600"
+            color="white"
             rounded="circle"
-            color="black"
           >
             REGISTER WITH EMAIL
           </Button>
@@ -129,6 +130,7 @@ const Signin = () => {
         <Div h={10}></Div>
         <Snackbar ref={snackbarRef} bg="red600" color="white" />
       </KeyboardAvoidingView>
+      <StatusBar style={"light"} />
     </SafeAreaView>
   );
 };

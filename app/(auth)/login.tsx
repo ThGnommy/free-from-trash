@@ -10,6 +10,8 @@ import { Link } from "expo-router";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../firebaseInit";
 import BackgroundVideo from "./components/BackgroundVideo";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { StatusBar } from "expo-status-bar";
 
 const Login = () => {
   const [email, setEmail] = useState<string>("");
@@ -30,8 +32,11 @@ const Login = () => {
   };
 
   return (
-    <Div style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <BackgroundVideo />
+      <Div style={{ backgroundColor: "transparent" }}>
+        <Text style={styles.title}>FREE OF TRASH</Text>
+      </Div>
       <KeyboardAvoidingView
         style={{ width: "100%" }}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -47,6 +52,7 @@ const Login = () => {
             value={email}
             onChangeText={(text) => setEmail(text)}
             placeholder="E-mail"
+            keyboardType="email-address"
           />
           <Input
             value={password}
@@ -66,9 +72,9 @@ const Login = () => {
           <Button
             onPress={() => login(email, password)}
             w={"100%"}
-            bg="white"
+            bg="green600"
+            color="white"
             rounded="circle"
-            color="black"
           >
             LOGIN WITH EMAIL
           </Button>
@@ -82,7 +88,8 @@ const Login = () => {
         <Div h={10}></Div>
       </KeyboardAvoidingView>
       <Snackbar ref={snackbarRef} bg="red600" color="white" />
-    </Div>
+      <StatusBar style={"light"} />
+    </SafeAreaView>
   );
 };
 
@@ -91,7 +98,7 @@ export default Login;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
+    justifyContent: "space-between",
     alignItems: "center",
   },
   buttonContainer: {

@@ -24,7 +24,7 @@ const Map = () => {
     mapRef.current?.animateCamera({ center: coord, zoom: 12 });
   };
 
-  const zoomToSelectedMarker = (creatorUID: string, coord: LatLng) => {
+  const zoomToSelectedMarker = (coord: LatLng) => {
     mapRef.current?.animateCamera({ center: coord, zoom: 18 });
   };
 
@@ -42,9 +42,7 @@ const Map = () => {
         {placeList?.map((place) => (
           <Marker
             coordinate={place.coordinate}
-            onPress={() =>
-              zoomToSelectedMarker(place.creatorUID, place.coordinate)
-            }
+            onPress={() => zoomToSelectedMarker(place.coordinate)}
           >
             <Callout
               tooltip

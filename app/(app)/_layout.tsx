@@ -20,6 +20,8 @@ const AppLayout = () => {
         name="home"
         options={{
           title: "Place List",
+
+          headerShadowVisible: false,
           headerLeft: () => (
             <TouchableOpacity onPress={() => router.push("/settings")}>
               <Icon
@@ -37,7 +39,7 @@ const AppLayout = () => {
               >
                 <Icon
                   name="leaderboard"
-                  color="black"
+                  color="blue500"
                   fontFamily="MaterialIcons"
                   fontSize={24}
                 />
@@ -45,7 +47,7 @@ const AppLayout = () => {
               <TouchableOpacity onPress={() => router.push("map")}>
                 <Icon
                   name="map-marked-alt"
-                  color="black"
+                  color="red500"
                   fontFamily="FontAwesome5"
                   fontSize={24}
                 />

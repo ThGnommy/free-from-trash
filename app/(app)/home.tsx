@@ -1,9 +1,7 @@
 import { StatusBar } from "expo-status-bar";
-import { useContext, useEffect, useState } from "react";
+import { useEffect } from "react";
 import { StyleSheet } from "react-native";
-import { useAuth } from "../../context/Auth";
-import { Button, Div, Fab, Icon, ScrollDiv, Text } from "react-native-magnus";
-// import AddPlace from "./components/NewPlaceFormScreen/AddPlace";
+import { Button, Div, Fab, Icon, Text } from "react-native-magnus";
 import { useRouter } from "expo-router";
 import {
   collection,
@@ -61,14 +59,14 @@ export const Home = () => {
 
   return (
     <>
-      <SafeAreaView edges={["bottom"]} style={{ flex: 1 }}>
+      <SafeAreaView edges={["bottom"]} style={styles.screen}>
         <Div flex={1}>
           {placeList && placeList!.length > 0 ? (
             <PlaceList />
           ) : (
             <Text>No plase was found...</Text>
           )}
-          {/* <StatusBar style={Platform.OS === "ios" ? "light" : "auto"} /> */}
+          <StatusBar style={"light"} />
         </Div>
       </SafeAreaView>
       <Fab bg="blue600" fontSize="xl">
@@ -101,10 +99,9 @@ export const Home = () => {
 export default Home;
 
 const styles = StyleSheet.create({
-  container: {
+  screen: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: "white",
   },
   title: {
     fontSize: 20,
