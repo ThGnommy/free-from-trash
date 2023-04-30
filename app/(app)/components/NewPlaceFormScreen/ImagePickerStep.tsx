@@ -34,7 +34,6 @@ const ImagePickerStep = () => {
     showActionSheetWithOptions(
       {
         options,
-        tintColor: "blue",
         destructiveButtonIndex,
         cancelButtonIndex,
       },

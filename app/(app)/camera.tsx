@@ -54,12 +54,18 @@ const Camera = () => {
             style={styles.closeIcon}
             onPress={() => router.back()}
           >
-            <Icon name="close" fontFamily="AntDesign" fontSize={40} />
+            <Icon
+              name="close"
+              fontFamily="AntDesign"
+              fontSize={40}
+              color="white"
+            />
           </TouchableOpacity>
           <TouchableOpacity onPress={toggleCameraType} style={styles.flipIcon}>
             <Icon
               name="flip-camera-ios"
               fontFamily="MaterialIcons"
+              color="white"
               fontSize={40}
             />
           </TouchableOpacity>
@@ -70,7 +76,8 @@ const Camera = () => {
             <Icon
               name="record-circle-outline"
               fontFamily="MaterialCommunityIcons"
-              fontSize={40}
+              fontSize={60}
+              color="white"
             />
           </TouchableOpacity>
         </ExpoCamera>
@@ -78,7 +85,12 @@ const Camera = () => {
         <Div flex={1} w={deviceWidth} h={deviceHeight}>
           <Image w="100%" h="100%" source={{ uri: previewImage }} />
           <TouchableOpacity style={styles.closeIcon} onPress={exitFromCamera}>
-            <Icon name="close" fontFamily="AntDesign" fontSize={40} />
+            <Icon
+              name="close"
+              fontFamily="AntDesign"
+              fontSize={40}
+              color="white"
+            />
           </TouchableOpacity>
           <TouchableOpacity
             style={{ ...styles.photoIcon, left: 50 }}
@@ -88,13 +100,19 @@ const Camera = () => {
               name="camera-retake"
               fontFamily="MaterialCommunityIcons"
               fontSize={40}
+              color="white"
             />
           </TouchableOpacity>
           <TouchableOpacity
             style={{ ...styles.photoIcon, left: deviceWidth / 2 - 20 }}
             onPress={confirmPhoto}
           >
-            <Icon name="done" fontFamily="MaterialIcons" fontSize={40} />
+            <Icon
+              name="done"
+              fontFamily="MaterialIcons"
+              fontSize={40}
+              color="white"
+            />
           </TouchableOpacity>
         </Div>
       )}
@@ -117,11 +135,9 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 40,
     left: 40,
-    color: "#fff",
   },
   photoIcon: {
     position: "absolute",
     bottom: 40,
-    color: "#fff",
   },
 });
