@@ -5,10 +5,15 @@ import { INewPlace } from "../../context/AppContext";
 import {
   arrayRemove,
   arrayUnion,
+  collection,
   deleteDoc,
   doc,
   getDoc,
+  getDocs,
+  increment,
+  query,
   updateDoc,
+  where,
 } from "firebase/firestore";
 import { auth, db, storage } from "../../firebaseInit";
 import {
@@ -16,7 +21,6 @@ import {
   Button,
   Div,
   Image,
-  Modal,
   ScrollDiv,
   Text,
 } from "react-native-magnus";
@@ -25,6 +29,7 @@ import MapView, { Marker, Region } from "react-native-maps";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { containAStringElement } from "../../utils/utils";
 import { ref, listAll, deleteObject } from "firebase/storage";
+import DeletePlaceModal from "./components/PlaceScreen/DeletePlaceModal";
 
 const PlaceScreen = () => {
   const { placeId, creatorUID } = useSearchParams();
@@ -110,6 +115,7 @@ const PlaceScreen = () => {
 
   const handleDeletePlace = async () => {
     await deleteDoc(doc(db, "places", placeId as string));
+    await updateScores();
     await deleteAllPlaceImages();
     router.back();
   };
@@ -134,6 +140,32 @@ const PlaceScreen = () => {
       .catch((error) => {
         // Uh-oh, an error occurred!
       });
+  };
+
+  const updateScores = async () => {
+    const userRef = doc(db, "users", currentUser?.uid!);
+
+    await updateDoc(userRef, {
+      score: increment(10),
+    });
+
+    userJoinedPhoto.forEach(async (url) => {
+      const usersRef = collection(db, "users");
+
+      const q = query(usersRef, where("photoURL", "==", url));
+
+      const querySnapshot = await getDocs(q);
+
+      querySnapshot.forEach(async (docSnaphot) => {
+        console.log(docSnaphot.id, " => ", docSnaphot.data());
+
+        const userRef = doc(db, "users", docSnaphot.id);
+
+        await updateDoc(userRef, {
+          score: increment(5),
+        });
+      });
+    });
   };
 
   useEffect(() => {
@@ -237,74 +269,13 @@ const PlaceScreen = () => {
             Delete Place
           </Button>
         )}
-        <Modal isVisible={deleteModal} p={10}>
-          <Div flex={1} justifyContent="center" alignItems="center">
-            <Text fontSize="5xl" fontWeight="bold" mb={20}>
-              Are you sure you want to delete this place?
-            </Text>
-            <Div row style={{ gap: 20 }}>
-              <Button w={100} bg="green600" onPress={handleDeletePlace}>
-                Yes
-              </Button>
-              <Button
-                bg="gray900"
-                w={100}
-                onPress={() => setDeleteModal(false)}
-              >
-                Close
-              </Button>
-            </Div>
-          </Div>
-          <Text fontSize="3xl" textAlign="center" mb={10}>
-            By cleaning this place
-          </Text>
-          <Div
-            p={10}
-            alignItems="center"
-            w="100%"
-            shadow="sm"
-            rounded="md"
-            bg="green200"
-          >
-            <Div
-              row
-              justifyContent="center"
-              alignItems="center"
-              style={{ gap: 10 }}
-            >
-              <Avatar size={40} source={{ uri: user?.photoURL }} />
-              <Text fontSize="xl">You'll earn 10 points!</Text>
-            </Div>
-          </Div>
-
-          <>
-            {userJoinedPhoto.length > 0 && (
-              <Div
-                p={10}
-                mt={10}
-                alignItems="center"
-                w="100%"
-                shadow="sm"
-                rounded="md"
-                bg="green100"
-              >
-                <Text fontSize="2xl" textAlign="center" mb={10}>
-                  Your helpers will earn 5 points!
-                </Text>
-                <Div
-                  row
-                  justifyContent="center"
-                  alignItems="center"
-                  style={{ gap: 10 }}
-                >
-                  {userJoinedPhoto.map((userJoined) => (
-                    <Avatar size={40} source={{ uri: userJoined }} />
-                  ))}
-                </Div>
-              </Div>
-            )}
-          </>
-        </Modal>
+        <DeletePlaceModal
+          user={user!}
+          isVisible={deleteModal}
+          handleDeletePlace={handleDeletePlace}
+          userJoinedPhoto={userJoinedPhoto}
+          setDeleteModal={setDeleteModal}
+        />
       </ScrollDiv>
     </SafeAreaView>
   );

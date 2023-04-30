@@ -10,12 +10,12 @@ import { useFocusEffect } from "expo-router";
 const Settings = () => {
   const { signOut } = useAuth();
 
-  const { userProvince, updateUserProvince } = useApp();
+  const { userProvince } = useApp();
 
   const currentUser = auth.currentUser;
 
   const [name, setName] = useState(currentUser?.displayName);
-  // const [currentProvince, setCurrentProvince] = useState<string>(userProvince);
+  const [score, setScore] = useState(0);
 
   const getUserInfo = async () => {
     const userRef = doc(db, "users", currentUser?.uid!);
@@ -23,6 +23,7 @@ const Settings = () => {
 
     if (userSnap.exists()) {
       setName(userSnap.data().name);
+      setScore(userSnap.data().score);
     } else {
       console.log("No such document!");
     }
@@ -38,6 +39,7 @@ const Settings = () => {
   const SkeletonPlaceholder = () => (
     <Div flexDir="row" justifyContent="center" alignItems="center" w="90%">
       <Div flex={1}>
+        <Skeleton.Box h={25} my={5} />
         <Skeleton.Box h={25} my={5} />
         <Skeleton.Box h={25} my={5} />
         <Skeleton.Box h={25} my={5} />
@@ -95,6 +97,7 @@ const Settings = () => {
             bg="gray200"
             w="90%"
             p={10}
+            mb={10}
             rounded="10"
             flexDir="row"
             justifyContent="space-between"
@@ -102,6 +105,18 @@ const Settings = () => {
           >
             <Text>Province</Text>
             <Text>{userProvince}</Text>
+          </Div>
+          <Div
+            bg="gray200"
+            w="90%"
+            p={10}
+            rounded="10"
+            flexDir="row"
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            <Text>Score</Text>
+            <Text>{score}</Text>
           </Div>
         </>
       ) : (

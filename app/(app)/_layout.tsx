@@ -87,7 +87,7 @@ const AppLayout = () => {
       <Stack.Screen name="settings-edit-user" options={{ title: "Edit" }} />
       <Stack.Screen
         name="map"
-        options={{ title: "Map", headerBackTitle: "Home" }}
+        options={{ title: "Places Overview", headerBackTitle: "Home" }}
       />
       <Stack.Screen
         name="add-new-place-form"
