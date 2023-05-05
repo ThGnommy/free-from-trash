@@ -22,6 +22,7 @@ import {
   Div,
   Image,
   ScrollDiv,
+  Skeleton,
   Text,
 } from "react-native-magnus";
 import { ICreator } from "../../context/types";
@@ -30,6 +31,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { containAStringElement } from "../../utils/utils";
 import { ref, listAll, deleteObject } from "firebase/storage";
 import DeletePlaceModal from "./components/PlaceScreen/DeletePlaceModal";
+import { Camera } from "expo-camera";
 
 const PlaceScreen = () => {
   const { placeId, creatorUID } = useSearchParams();
@@ -50,13 +52,18 @@ const PlaceScreen = () => {
 
   const getPlaceInfo = async () => {
     const docRef = doc(db, "places", placeId as string);
-    const docSnap = await getDoc(docRef);
 
-    if (docSnap.exists()) {
-      setPlace(docSnap.data() as INewPlace);
-    } else {
-      // docSnap.data() will be undefined in this case
-      console.log("No such document!");
+    try {
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        setPlace(docSnap.data() as INewPlace);
+      } else {
+        // docSnap.data() will be undefined in this case
+        console.log("No such document!");
+      }
+    } catch (error) {
+      throw new Error((error as Error).message);
     }
   };
 
@@ -174,112 +181,146 @@ const PlaceScreen = () => {
     getUserJoinedImage();
   }, []);
 
+  const SkeletonPlaceholder = () => (
+    <Div flex={1} alignSelf="center" mt={20} w="90%">
+      <Div>
+        <Skeleton.Circle h={50} w={50} mb={20} />
+        <Skeleton.Box h={25} />
+      </Div>
+      <Div>
+        <Skeleton.Box h={100} my={20} />
+        <Skeleton.Box h={25} />
+        <Skeleton.Box h={150} my={20} />
+        <Skeleton.Box h={25} />
+      </Div>
+    </Div>
+  );
+
   return (
     <SafeAreaView
       edges={["bottom"]}
       style={{ height: "100%", backgroundColor: "white" }}
     >
-      <ScrollDiv px={20}>
-        <Div mt={10}>
-          <Avatar size={50} source={{ uri: user?.photoURL }} />
-          <Text fontSize="4xl" fontWeight="bold">
-            {user?.name}'s Place
-          </Text>
-        </Div>
-        <Text my={10} fontSize="3xl" fontWeight="bold">
-          Place Images
-        </Text>
-        <Div
-          flexDir="column"
-          justifyContent="center"
-          alignItems="center"
-          style={{ gap: 10 }}
-        >
-          {place?.placeImages.map((image, idx) => (
-            <Image
-              key={idx}
-              alignSelf="center"
-              h={200}
-              w="100%"
-              rounded="lg"
+      {place && user && userJoinedPhoto ? (
+        <ScrollDiv px={20}>
+          <Div my={10}>
+            <Avatar
+              size={50}
               source={{
                 uri:
-                  image ||
+                  user?.photoURL ||
                   "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541",
               }}
             />
-          ))}
-        </Div>
-        <Text my={10} fontSize="3xl" fontWeight="bold">
-          Description
-        </Text>
-        <Text mb={10}>
-          {place?.description ? place.description : "No description."}
-        </Text>
-        <Text mb={10} fontSize="3xl" fontWeight="bold">
-          Location
-        </Text>
-        <Div mb={10} alignItems="center" pointerEvents="none" shadow="sm">
-          <MapView
-            region={place?.coordinate as Region}
-            maxZoomLevel={16}
-            provider="google"
-            style={styles.map}
+            <Text fontSize="4xl" fontWeight="bold" mt={10}>
+              {user?.name}'s Place
+            </Text>
+          </Div>
+          {/* <Text my={10} fontSize="3xl" fontWeight="bold">
+            Place Images
+          </Text> */}
+          <Div
+            flexDir="column"
+            justifyContent="center"
+            alignItems="center"
+            style={{ gap: 10 }}
           >
-            <Marker coordinate={place?.coordinate!} />
-          </MapView>
-        </Div>
-        <Div>
-          <Text fontSize="3xl" fontWeight="bold">
-            Helpers
+            {place?.placeImages.map((image) => (
+              <Image
+                key={image}
+                alignSelf="center"
+                h={200}
+                w="100%"
+                rounded="lg"
+                source={{
+                  uri:
+                    image ||
+                    "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541",
+                }}
+              />
+            ))}
+          </Div>
+          <Text my={10} fontSize="3xl" fontWeight="bold">
+            Description
           </Text>
-          <Div row style={{ gap: 10 }}>
-            {containAStringElement(userJoinedPhoto) ? (
-              userJoinedPhoto?.map((userPhoto, idx) => (
-                <Avatar
-                  shadow={1}
-                  key={idx}
-                  size={50}
-                  my={5}
-                  source={{
-                    uri:
-                      userPhoto ||
-                      "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541",
-                  }}
-                />
-              ))
-            ) : (
-              <Text>None.</Text>
+          <Text mb={10}>
+            {place?.description ? place.description : "No description."}
+          </Text>
+          <Text mb={10} fontSize="3xl" fontWeight="bold">
+            Location
+          </Text>
+          <Div mb={10} alignItems="center" pointerEvents="none" shadow="sm">
+            {place?.coordinate && (
+              <MapView
+                initialCamera={{
+                  center: place.coordinate,
+                  heading: 1,
+                  pitch: 1,
+                  zoom: 15,
+                }}
+                maxZoomLevel={16}
+                provider="google"
+                style={styles.map}
+              >
+                <Marker coordinate={place.coordinate} />
+              </MapView>
             )}
           </Div>
-        </Div>
-        {creatorUID !== currentUser?.uid && (
-          <Button
-            bg={userAlreadyJoined ? "red600" : "blue600"}
-            mt={10}
-            onPress={handleJoined}
-          >
-            {!userAlreadyJoined ? "Join" : "Leave"}
-          </Button>
-        )}
-        {creatorUID === currentUser?.uid && (
-          <Button
-            w="100%"
-            bg="red700"
-            mt={10}
-            onPress={() => setDeleteModal(true)}
-          >
-            Delete Place
-          </Button>
-        )}
-        <DeletePlaceModal
-          user={user!}
-          isVisible={deleteModal}
-          handleDeletePlace={handleDeletePlace}
-          userJoinedPhoto={userJoinedPhoto}
-          setDeleteModal={setDeleteModal}
-        />
-      </ScrollDiv>
+          <Div>
+            <Text fontSize="3xl" fontWeight="bold">
+              Helpers
+            </Text>
+            <Div row style={{ gap: 10 }}>
+              {containAStringElement(userJoinedPhoto) ? (
+                userJoinedPhoto?.map((userPhoto, idx) => (
+                  <Avatar
+                    key={userPhoto}
+                    shadow={1}
+                    size={50}
+                    my={5}
+                    source={{
+                      uri:
+                        userPhoto ||
+                        "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541",
+                    }}
+                  />
+                ))
+              ) : (
+                <Text>None.</Text>
+              )}
+            </Div>
+          </Div>
+          {creatorUID !== currentUser?.uid && (
+            <Button
+              bg={userAlreadyJoined ? "red600" : "blue600"}
+              mt={10}
+              onPress={handleJoined}
+            >
+              {!userAlreadyJoined ? "Join" : "Leave"}
+            </Button>
+          )}
+          {creatorUID === currentUser?.uid && (
+            <Button
+              w="100%"
+              bg="red700"
+              mt={10}
+              mb={20}
+              onPress={() => setDeleteModal(true)}
+            >
+              Delete Place
+            </Button>
+          )}
+          <DeletePlaceModal
+            user={user!}
+            isVisible={deleteModal}
+            handleDeletePlace={handleDeletePlace}
+            userJoinedPhoto={userJoinedPhoto}
+            setDeleteModal={setDeleteModal}
+          />
+        </ScrollDiv>
+      ) : (
+        <SkeletonPlaceholder />
+      )}
     </SafeAreaView>
   );
 };

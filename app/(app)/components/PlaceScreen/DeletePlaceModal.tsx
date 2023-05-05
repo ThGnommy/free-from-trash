@@ -86,7 +86,11 @@ const DeletePlaceModal = ({
               style={{ gap: 10 }}
             >
               {userJoinedPhoto.map((userJoined) => (
-                <Avatar size={40} source={{ uri: userJoined }} />
+                <Avatar
+                  key={userJoined}
+                  size={40}
+                  source={{ uri: userJoined }}
+                />
               ))}
             </Div>
           </Div>

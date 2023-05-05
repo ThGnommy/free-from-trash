@@ -115,33 +115,42 @@ const NewPlaceConfirmation = () => {
 
   return verification === false ? (
     <ScrollDiv flex={1} p={10}>
-      <Text textAlign="center" fontSize="2xl">
+      <Text fontSize="2xl" fontWeight="bold">
         Selected images
       </Text>
-      <Div alignItems="center" style={{ gap: 10 }} my={30}>
+      <Div alignItems="center" style={{ gap: 10 }} my={20}>
         {newPlace.placeImages.map(
           (image) =>
             image !== "" && (
-              <Image rounded="md" w={250} h={200} source={{ uri: image }} />
+              <Image
+                key={image}
+                alignSelf="center"
+                h={200}
+                w="100%"
+                rounded="lg"
+                source={{ uri: image }}
+              />
             )
         )}
       </Div>
-      <Text textAlign="center" fontSize="2xl">
+      <Text fontSize="2xl" fontWeight="bold">
         Selected location
       </Text>
 
       <Image
         mt={30}
         alignSelf="center"
-        rounded="md"
-        w={250}
         h={200}
+        w="100%"
+        rounded="lg"
         source={{ uri: newPlace.previewMapImage }}
       />
       <Div>
         {newPlace.description ? (
-          <Div alignSelf="center" w="90%" my={30}>
-            <Text fontSize="2xl">Description:</Text>
+          <Div alignSelf="center" w="100%" mt={20}>
+            <Text fontSize="2xl" fontWeight="bold">
+              Description
+            </Text>
             <Text>{newPlace.description}</Text>
           </Div>
         ) : (
@@ -151,7 +160,7 @@ const NewPlaceConfirmation = () => {
       <Button
         loading={loading}
         onPress={writeNewPlaceInDB}
-        my={30}
+        mb={30}
         alignSelf="center"
       >
         Confirm Place

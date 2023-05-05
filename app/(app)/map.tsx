@@ -41,6 +41,7 @@ const Map = () => {
       >
         {placeList?.map((place) => (
           <Marker
+            key={place.id}
             coordinate={place.coordinate}
             onPress={() => zoomToSelectedMarker(place.coordinate)}
           >

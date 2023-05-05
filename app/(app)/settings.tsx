@@ -71,7 +71,7 @@ const Settings = () => {
             w="90%"
             p={10}
             mb={10}
-            rounded="10"
+            rounded="sm"
             flexDir="row"
             justifyContent="space-between"
             alignItems="center"
@@ -85,7 +85,7 @@ const Settings = () => {
             w="90%"
             p={10}
             mb={10}
-            rounded="10"
+            rounded="sm"
             flexDir="row"
             justifyContent="space-between"
             alignItems="center"
@@ -98,7 +98,7 @@ const Settings = () => {
             w="90%"
             p={10}
             mb={10}
-            rounded="10"
+            rounded="sm"
             flexDir="row"
             justifyContent="space-between"
             alignItems="center"
@@ -110,7 +110,7 @@ const Settings = () => {
             bg="gray200"
             w="90%"
             p={10}
-            rounded="10"
+            rounded="sm"
             flexDir="row"
             justifyContent="space-between"
             alignItems="center"
