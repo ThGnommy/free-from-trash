@@ -1,8 +1,8 @@
 import { StyleSheet } from "react-native";
 import React, { useEffect } from "react";
 import { Div, Icon, Modal, Text } from "react-native-magnus";
-import { useApp } from "../../../../context/AppContext";
-import { auth } from "../../../../firebaseInit";
+import { useApp } from "../../../context/AppContext";
+import { auth } from "../../../firebaseInit";
 
 const VerifyModal = ({
   visible,

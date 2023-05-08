@@ -1,18 +1,15 @@
 import { StyleSheet } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Button, Div, Input, Text } from "react-native-magnus";
-import { useAuth } from "../../context/Auth";
-import { auth, db } from "../../firebaseInit";
-import ProfilePicture from "./components/SettingsScreen/ProfilePicture";
-import CitySelector from "../shared-components/CitySelector";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
-import { useApp } from "../../context/AppContext";
 import { User, updateProfile } from "firebase/auth";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
+import ProfilePicture from "../../../(components)/ProfileScreen/ProfilePicture";
+import { useApp } from "../../../../context/AppContext";
+import { auth, db } from "../../../../firebaseInit";
+import CitySelector from "../../../shared-components/CitySelector";
 
-const SettingsEditUser = () => {
-  const { signOut } = useAuth();
-
-  const { userProvince, updateUserProvince } = useApp();
+const EditProfile = () => {
+  const { userProvince } = useApp();
 
   const currentUser = auth.currentUser;
 
@@ -117,4 +114,4 @@ const SettingsEditUser = () => {
   );
 };
 
-export default SettingsEditUser;
+export default EditProfile;

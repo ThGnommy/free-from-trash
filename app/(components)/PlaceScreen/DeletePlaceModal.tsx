@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 import React from "react";
 import { Div, Avatar, Text, Modal, Button } from "react-native-magnus";
-import { ICreator } from "../../../../context/types";
+import { ICreator } from "../../../context/types";
 import {
   collection,
   doc,
@@ -11,7 +11,7 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore";
-import { auth, db } from "../../../../firebaseInit";
+import { auth, db } from "../../../firebaseInit";
 
 interface ModalProps {
   user: ICreator;

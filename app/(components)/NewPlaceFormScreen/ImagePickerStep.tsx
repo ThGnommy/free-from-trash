@@ -1,14 +1,16 @@
 import { StyleSheet, TouchableOpacity } from "react-native";
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import * as ExpoImagePicker from "expo-image-picker";
-import { Div, Icon, Image, Modal, Snackbar, Text } from "react-native-magnus";
-import { useApp } from "../../../../context/AppContext";
+import { Div, Icon, Image, Snackbar, Text } from "react-native-magnus";
+import { useApp } from "../../../context/AppContext";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import { Camera } from "expo-camera";
-import { useRouter } from "expo-router";
+import { useRouter, useSegments } from "expo-router";
 const ImagePickerStep = () => {
-  const { setSingleNewImages, newPlace, removeSelectedImage } = useApp();
   const router = useRouter();
+  const segments = useSegments();
+
+  const { setSingleNewImages, newPlace, removeSelectedImage } = useApp();
 
   const { showActionSheetWithOptions } = useActionSheet();
 
@@ -44,7 +46,10 @@ const ImagePickerStep = () => {
             await requestPermission().then((permission) => {
               if (permission?.status === "granted") {
                 // Pass the index of the image, so we now where to put the camera photo
-                router.push({ pathname: "camera", params: { index: idx } });
+                router.push({
+                  pathname: `camera`,
+                  params: { index: idx },
+                });
               }
               if (!permission || !permission.granted) {
                 snackbarRef.current.show(

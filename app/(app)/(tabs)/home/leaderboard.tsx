@@ -1,10 +1,10 @@
 import { FlatList, StyleSheet } from "react-native";
 import React, { useEffect, useState } from "react";
-import { Div, DivProps, ScrollDiv, Text } from "react-native-magnus";
-import { ICreator } from "../../context/types";
+import { Div, Text } from "react-native-magnus";
+import { ICreator } from "../../../../context/types";
 import { getDocs, collection, query, orderBy } from "firebase/firestore";
-import { db } from "../../firebaseInit";
-import User from "./components/Leaderboard/User";
+import User from "../../../(components)/Leaderboard/User";
+import { db } from "../../../../firebaseInit";
 
 interface UserProps {
   item: {

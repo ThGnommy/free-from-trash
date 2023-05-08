@@ -3,10 +3,10 @@ import React, { useEffect, useState } from "react";
 import { Button, Div, Icon, Image, Text } from "react-native-magnus";
 import PickLocationModal from "./PickLocationModal";
 import useUserLocation from "../../hooks/useUserLocation";
-import { mapPreviewLocation } from "../../../../utils/location";
+import { mapPreviewLocation } from "../../../utils/location";
 import * as Location from "expo-location";
 import { LatLng } from "react-native-maps";
-import { useApp } from "../../../../context/AppContext";
+import { useApp } from "../../../context/AppContext";
 
 const MapPickerStep = () => {
   const { location } = useUserLocation();

@@ -15,7 +15,7 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore";
-import { auth, db, storage } from "../../firebaseInit";
+
 import {
   Avatar,
   Button,
@@ -25,13 +25,15 @@ import {
   Skeleton,
   Text,
 } from "react-native-magnus";
-import { ICreator } from "../../context/types";
+
 import MapView, { Marker, Region } from "react-native-maps";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { containAStringElement } from "../../utils/utils";
 import { ref, listAll, deleteObject } from "firebase/storage";
-import DeletePlaceModal from "./components/PlaceScreen/DeletePlaceModal";
 import { Camera } from "expo-camera";
+import DeletePlaceModal from "../(components)/PlaceScreen/DeletePlaceModal";
+import { ICreator } from "../../context/types";
+import { auth, db, storage } from "../../firebaseInit";
+import { containAStringElement } from "../../utils/utils";
 
 const PlaceScreen = () => {
   const { placeId, creatorUID } = useSearchParams();

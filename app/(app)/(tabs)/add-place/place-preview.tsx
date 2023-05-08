@@ -1,8 +1,6 @@
 import { StyleSheet } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Button, Div, Image, ScrollDiv, Text } from "react-native-magnus";
-import { auth, db, storage } from "../../firebaseInit";
-import { useApp } from "../../context/AppContext";
 import {
   Timestamp,
   arrayUnion,
@@ -12,10 +10,13 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import VerifyModal from "./components/NewPlaceFormScreen/VerifyModal";
-import { useRouter } from "expo-router";
 
-const NewPlaceConfirmation = () => {
+import { useRouter } from "expo-router";
+import VerifyModal from "../../../(components)/NewPlaceFormScreen/VerifyModal";
+import { useApp } from "../../../../context/AppContext";
+import { auth, storage, db } from "../../../../firebaseInit";
+
+const PlacePreview = () => {
   const router = useRouter();
 
   const currentUser = auth.currentUser;
@@ -174,6 +175,6 @@ const NewPlaceConfirmation = () => {
   );
 };
 
-export default NewPlaceConfirmation;
+export default PlacePreview;
 
 const styles = StyleSheet.create({});

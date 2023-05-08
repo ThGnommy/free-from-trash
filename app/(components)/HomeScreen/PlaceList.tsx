@@ -1,6 +1,6 @@
 import { FlatList, StyleSheet, Text, View } from "react-native";
 import React from "react";
-import { useApp } from "../../../../context/AppContext";
+import { useApp } from "../../../context/AppContext";
 import Place from "./Place";
 
 const PlaceList = () => {

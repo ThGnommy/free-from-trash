@@ -1,13 +1,14 @@
-import { StyleSheet } from "react-native";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { Avatar, Button, Div, Icon, Skeleton, Text } from "react-native-magnus";
-import { useAuth } from "../../context/Auth";
-import { auth, db } from "../../firebaseInit";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
-import { useApp } from "../../context/AppContext";
-import { useFocusEffect } from "expo-router";
 
-const Settings = () => {
+import { doc, getDoc } from "firebase/firestore";
+
+import { Link, useFocusEffect } from "expo-router";
+import { useApp } from "../../../../context/AppContext";
+import { useAuth } from "../../../../context/Auth";
+import { auth, db } from "../../../../firebaseInit";
+
+const Profile = () => {
   const { signOut } = useAuth();
 
   const { userProvince } = useApp();
@@ -55,9 +56,9 @@ const Settings = () => {
       p={10}
       bg="white"
     >
-      <Text fontSize="4xl" py={10}>
+      {/* <Text fontSize="4xl" py={10}>
         Your Profile
-      </Text>
+      </Text> */}
       {currentUser?.photoURL ? (
         <Avatar mb={10} size={100} source={{ uri: currentUser?.photoURL! }} />
       ) : (
@@ -140,8 +141,9 @@ const Settings = () => {
       >
         Logout
       </Button>
+      {__DEV__ && <Link href="_sitemap">Sitemap</Link>}
     </Div>
   );
 };
 
-export default Settings;
+export default Profile;

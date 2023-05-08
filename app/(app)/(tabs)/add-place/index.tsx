@@ -1,18 +1,21 @@
 import { KeyboardAvoidingView, StyleSheet } from "react-native";
 import React, { useEffect, useRef } from "react";
-import { ScrollDiv, Div, Button, Snackbar } from "react-native-magnus";
-import ImagePickerStep from "./components/NewPlaceFormScreen/ImagePickerStep";
-import MapPickerStep from "./components/NewPlaceFormScreen/MapPickerStep";
-import PlaceDescriptionStep from "./components/NewPlaceFormScreen/PlaceDescriptionStep";
-import { useApp } from "../../context/AppContext";
-import { auth } from "../../firebaseInit";
-import { useRouter } from "expo-router";
+import { ScrollDiv, Div, Button, Snackbar, Icon } from "react-native-magnus";
+import ImagePickerStep from "../../../(components)/NewPlaceFormScreen/ImagePickerStep";
+import MapPickerStep from "../../../(components)/NewPlaceFormScreen/MapPickerStep";
+import PlaceDescriptionStep from "../../../(components)/NewPlaceFormScreen/PlaceDescriptionStep";
+import { useApp } from "../../../../context/AppContext";
+import { auth } from "../../../../firebaseInit";
+import { useRouter, useSegments } from "expo-router";
 import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 
-const AddNewPlaceForm = () => {
+const AddPlace = () => {
   const currentUser = auth.currentUser;
 
   const router = useRouter();
+  const segment = useSegments();
+
+  const PATH = segment.join("/");
 
   const { setCreatorUID, newPlace } = useApp();
 
@@ -33,7 +36,7 @@ const AddNewPlaceForm = () => {
     } else if (!missPhoto && missLocation) {
       snackbarRef.current.show("Select a location.");
     } else {
-      router.push("new-place-confirmation");
+      router.push(`${segment[0]}/camera`);
     }
   };
 
@@ -56,7 +59,7 @@ const AddNewPlaceForm = () => {
   );
 };
 
-export default AddNewPlaceForm;
+export default AddPlace;
 
 const styles = StyleSheet.create({
   screen: {},

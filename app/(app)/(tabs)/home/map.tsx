@@ -2,9 +2,9 @@ import { StyleSheet } from "react-native";
 import React, { Suspense, useEffect, useRef, useState } from "react";
 import MapView, { Callout, LatLng, Marker } from "react-native-maps";
 import { Avatar, Div, Icon, Text } from "react-native-magnus";
-import { useApp } from "../../context/AppContext";
 import * as Location from "expo-location";
 import { useRouter } from "expo-router";
+import { useApp } from "../../../../context/AppContext";
 
 const Map = () => {
   const { placeList, userProvince } = useApp();

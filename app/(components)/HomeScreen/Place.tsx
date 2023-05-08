@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Div, Icon, Image, Skeleton, Text } from "react-native-magnus";
 import { StyleSheet, TouchableWithoutFeedback } from "react-native";
-import { INewPlace } from "../../../../context/AppContext";
+import { INewPlace } from "../../../context/AppContext";
 import { query, collection, where, getDocs } from "firebase/firestore";
-import { db } from "../../../../firebaseInit";
-import { useRouter } from "expo-router";
+import { db } from "../../../firebaseInit";
+import { useRouter, useSegments } from "expo-router";
 
 const Place = ({
   creatorUID,
@@ -19,6 +19,8 @@ const Place = ({
   const [photoURL, setPhotoURL] = useState<string>("");
 
   const router = useRouter();
+  const segments = useSegments();
+  const PATH = segments.join("/");
 
   const getPlaceInfo = async () => {
     const q = query(collection(db, "users"), where("uid", "==", creatorUID));
@@ -85,7 +87,7 @@ const Place = ({
       <TouchableWithoutFeedback
         onPress={() =>
           router.push({
-            pathname: "[place]",
+            pathname: `${segments[0]}[place]`,
             params: {
               placeId: id,
               creatorUID,
