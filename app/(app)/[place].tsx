@@ -216,9 +216,6 @@ const PlaceScreen = () => {
               {user?.name}'s Place
             </Text>
           </Div>
-          {/* <Text my={10} fontSize="3xl" fontWeight="bold">
-            Place Images
-          </Text> */}
           <Div
             flexDir="column"
             justifyContent="center"
@@ -249,7 +246,13 @@ const PlaceScreen = () => {
           <Text mb={10} fontSize="3xl" fontWeight="bold">
             Location
           </Text>
-          <Div mb={10} alignItems="center" pointerEvents="none" shadow="sm">
+          <Div
+            mb={10}
+            alignItems="center"
+            pointerEvents="none"
+            shadow="sm"
+            shadowColor="#000"
+          >
             {place?.coordinate && (
               <MapView
                 initialCamera={{
@@ -275,7 +278,8 @@ const PlaceScreen = () => {
                 userJoinedPhoto?.map((userPhoto, idx) => (
                   <Avatar
                     key={userPhoto}
-                    shadow={1}
+                    shadow="md"
+                    shadowColor="#000"
                     size={50}
                     my={5}
                     source={{

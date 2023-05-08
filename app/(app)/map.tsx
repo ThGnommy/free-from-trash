@@ -60,6 +60,7 @@ const Map = () => {
               <Div
                 bg="white"
                 shadow="sm"
+                shadowColor="#000"
                 p={10}
                 mb={5}
                 rounded={10}
@@ -74,9 +75,9 @@ const Map = () => {
                 >
                   <Avatar
                     size={40}
-                    source={{ uri: place.creatorInfo.photoURL || "" }}
+                    source={{ uri: place.creatorInfo?.photoURL }}
                   />
-                  <Text>{place.creatorInfo.name}'s Place</Text>
+                  <Text>{place.creatorInfo?.name}'s Place</Text>
                 </Div>
                 <Div
                   row

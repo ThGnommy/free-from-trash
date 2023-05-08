@@ -51,6 +51,7 @@ const DeletePlaceModal = ({
         alignItems="center"
         w="100%"
         shadow="sm"
+        shadowColor="#000"
         rounded="md"
         bg="green200"
       >
@@ -73,6 +74,7 @@ const DeletePlaceModal = ({
             alignItems="center"
             w="100%"
             shadow="sm"
+            shadowColor="#000"
             rounded="md"
             bg="green100"
           >

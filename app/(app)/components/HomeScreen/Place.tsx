@@ -34,9 +34,23 @@ const Place = ({
     getPlaceInfo();
   }, []);
 
+  const PlaceholderName = () => (
+    <Div
+      flexDir="row"
+      justifyContent="space-between"
+      alignItems="center"
+      mt={10}
+    >
+      <Skeleton.Circle h={40} w={40} />
+      <Skeleton.Box w="100%" h={20} />
+    </Div>
+  );
+
+  const PlaceholderImage = () => <Skeleton.Box h={150} rounded="md" />;
+
   return (
     <Div shadow="sm" m={10} p={10} rounded="md" bg="white">
-      {placeImages && (
+      {placeImages[0] !== "" ? (
         <Div
           h={150}
           rounded="md"
@@ -65,6 +79,8 @@ const Place = ({
             </Text>
           </Div>
         </Div>
+      ) : (
+        <PlaceholderImage />
       )}
       <TouchableWithoutFeedback
         onPress={() =>
@@ -83,17 +99,21 @@ const Place = ({
           alignItems="center"
           mt={10}
         >
-          <Div row alignItems="center">
-            <Image
-              h={40}
-              w={40}
-              rounded="circle"
-              source={{
-                uri: photoURL,
-              }}
-            />
-            <Text ml={10}>{name}'s Place</Text>
-          </Div>
+          {photoURL !== "" ? (
+            <Div row alignItems="center">
+              <Image
+                h={40}
+                w={40}
+                rounded="circle"
+                source={{
+                  uri: photoURL,
+                }}
+              />
+              <Text ml={10}>{name}'s Place</Text>
+            </Div>
+          ) : (
+            <PlaceholderName />
+          )}
           <Icon
             name="chevron-right"
             fontFamily="Feather"

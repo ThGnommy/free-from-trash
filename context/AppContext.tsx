@@ -10,7 +10,7 @@ export interface INewPlace {
   street: string;
   city: string;
   userJoined: string[];
-  creatorInfo: ICreatorInfo;
+  creatorInfo?: ICreatorInfo;
   id?: string;
   description?: string;
 }

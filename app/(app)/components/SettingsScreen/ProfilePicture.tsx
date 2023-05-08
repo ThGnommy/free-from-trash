@@ -1,19 +1,12 @@
 import { StyleSheet, TouchableOpacity } from "react-native";
-import React, { useEffect, useState } from "react";
-import { Avatar, Div, Icon, Skeleton, Text } from "react-native-magnus";
+import React, { useState } from "react";
+import { Avatar, Div, Icon, Skeleton } from "react-native-magnus";
 import { auth, db, storage } from "../../../../firebaseInit";
 import * as ImagePicker from "expo-image-picker";
 import { ref, uploadBytes } from "firebase/storage";
 import { User } from "firebase/auth";
 import { updateUserPhotoURL } from "../../../../firebaseUtils";
-import {
-  collection,
-  doc,
-  getDoc,
-  query,
-  updateDoc,
-  where,
-} from "firebase/firestore";
+import { doc } from "firebase/firestore";
 
 const ProfilePicture = () => {
   const currentUser = auth.currentUser as User;
