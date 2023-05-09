@@ -1,26 +1,23 @@
-import React, { useEffect, useRef } from "react";
 import { Tabs } from "expo-router";
-import { Icon } from "react-native-magnus";
+import { Icon, useTheme } from "react-native-magnus";
 
 export const unstable_settings = {
   initialRouteName: "index",
 };
 
 const AppLayout = () => {
+  const { theme } = useTheme();
+
   return (
     <Tabs
       screenOptions={{
         tabBarHideOnKeyboard: true,
         tabBarStyle: {
-          position: "absolute",
-          paddingBottom: 0,
-          borderRadius: 32,
-          marginHorizontal: 10,
-          marginVertical: 20,
-          backgroundColor: "orange",
+          // paddingBottom: 10,
+          backgroundColor: theme.colors?.primary,
         },
-        tabBarActiveTintColor: "orange",
-        tabBarInactiveTintColor: "black",
+        tabBarActiveTintColor: "darker",
+        tabBarInactiveTintColor: "secondary",
       }}
     >
       <Tabs.Screen
@@ -28,16 +25,13 @@ const AppLayout = () => {
         options={{
           headerShown: false,
           tabBarShowLabel: false,
-          tabBarIcon: (props) => (
+          tabBarIcon: ({ focused, color }) => (
             <Icon
-              name="home"
-              fontFamily="Feather"
-              fontSize={26}
-              bg="white"
-              p={10}
-              bottom={props.focused ? 5 : 0}
+              name="md-home-sharp"
+              fontFamily="Ionicons"
+              fontSize={20}
               rounded="circle"
-              color={props.color}
+              color={color}
             />
           ),
         }}
@@ -47,16 +41,13 @@ const AppLayout = () => {
         options={{
           headerShown: false,
           tabBarShowLabel: false,
-          tabBarIcon: (props) => (
+          tabBarIcon: ({ focused, color }) => (
             <Icon
-              name="add-location-alt"
+              name="add-circle"
               fontFamily="MaterialIcons"
-              fontSize={26}
-              bg="white"
-              p={10}
-              bottom={props.focused ? 5 : 0}
-              rounded="circle"
-              color={props.color}
+              mb={5}
+              fontSize={40}
+              color={color}
             />
           ),
         }}
@@ -66,16 +57,13 @@ const AppLayout = () => {
         options={{
           headerShown: false,
           tabBarShowLabel: false,
-          tabBarIcon: (props) => (
+          tabBarIcon: ({ focused, color }) => (
             <Icon
               name="user"
-              fontFamily="Feather"
-              fontSize={26}
-              bg="white"
-              p={10}
-              bottom={props.focused ? 5 : 0}
+              fontFamily="FontAwesome"
+              fontSize={20}
               rounded="circle"
-              color={props.color}
+              color={color}
             />
           ),
         }}

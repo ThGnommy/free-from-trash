@@ -1,6 +1,7 @@
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
-import { Div, Text } from "react-native-magnus";
+import { StyleSheet, useWindowDimensions } from "react-native";
+import { Div, Icon, Text } from "react-native-magnus";
 import {
   collection,
   doc,
@@ -17,6 +18,8 @@ export const Home = () => {
   const { updatePlaceList, placeList, updateUserProvince } = useApp();
 
   const currentUser = auth.currentUser;
+
+  const dimensions = useWindowDimensions();
 
   const readUserProvince = async () => {
     const docRef = doc(db, "users", currentUser?.uid!);
@@ -53,16 +56,49 @@ export const Home = () => {
 
   return (
     <>
-      <Div flex={1}>
+      <Div flex={1} bg="white">
         {placeList && placeList!.length > 0 ? (
           <PlaceList />
         ) : (
-          <Text>No plase was found...</Text>
+          <Div style={{ ...styles.notFoundText, top: dimensions.height / 3 }}>
+            <Text
+              color="darker"
+              fontSize="4xl"
+              opacity={0.5}
+              textAlign="center"
+            >
+              We can't find any places.
+            </Text>
+            <Text
+              color="darker"
+              mt={20}
+              fontSize="4xl"
+              opacity={0.5}
+              textAlign="center"
+            >
+              Add a place yourself!
+            </Text>
+            <Icon
+              mt={50}
+              color="darker"
+              name="long-arrow-down"
+              fontFamily="FontAwesome"
+              fontSize={50}
+              opacity={0.5}
+            />
+          </Div>
         )}
         <StatusBar style={"light"} />
       </Div>
+      <StatusBar style={"dark"} />
     </>
   );
 };
 
 export default Home;
+
+const styles = StyleSheet.create({
+  notFoundText: {
+    textAlign: "center",
+  },
+});

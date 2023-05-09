@@ -5,6 +5,7 @@ import { Avatar, Div, Icon, Text } from "react-native-magnus";
 import * as Location from "expo-location";
 import { useRouter } from "expo-router";
 import { useApp } from "../../../../context/AppContext";
+import { StatusBar } from "expo-status-bar";
 
 const Map = () => {
   const { placeList, userProvince } = useApp();
@@ -102,6 +103,7 @@ const Map = () => {
           </Marker>
         ))}
       </MapView>
+      <StatusBar style={"light"} />
     </Div>
   );
 };

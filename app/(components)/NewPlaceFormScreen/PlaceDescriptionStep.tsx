@@ -1,4 +1,4 @@
-import { KeyboardAvoidingView, StyleSheet, TextInput } from "react-native";
+import { StyleSheet, TextInput } from "react-native";
 import React, { useState } from "react";
 import { Div, Text } from "react-native-magnus";
 import { useApp } from "../../../context/AppContext";
@@ -48,6 +48,9 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     height: 200,
     textAlignVertical: "top",
-    padding: 10,
+    paddingTop: 10,
+    paddingBottom: 10,
+    paddingLeft: 10,
+    paddingRight: 10,
   },
 });

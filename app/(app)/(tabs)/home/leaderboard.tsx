@@ -5,6 +5,7 @@ import { ICreator } from "../../../../context/types";
 import { getDocs, collection, query, orderBy } from "firebase/firestore";
 import User from "../../../(components)/Leaderboard/User";
 import { db } from "../../../../firebaseInit";
+import { StatusBar } from "expo-status-bar";
 
 interface UserProps {
   item: {
@@ -39,9 +40,22 @@ const Leaderboard = () => {
   }, []);
 
   const ListHeader = (
-    <Div row justifyContent="space-between" alignItems="center" p={10}>
-      <Text fontSize="2xl">User</Text>
-      <Text fontSize="2xl">Score</Text>
+    <Div
+      bg="darker"
+      row
+      justifyContent="space-between"
+      alignItems="center"
+      p={10}
+      my={10}
+      mx={5}
+      rounded="md"
+    >
+      <Text color="primary" fontSize="2xl">
+        User
+      </Text>
+      <Text color="primary" fontSize="2xl">
+        Score
+      </Text>
     </Div>
   );
 
@@ -51,7 +65,7 @@ const Leaderboard = () => {
         data={allUser}
         renderItem={({ item, index }: UserProps) => (
           <User
-            bg={index % 2 ? "white" : "gray200"}
+            bg={index % 2 ? "white" : "primary"}
             row
             justifyContent="space-between"
             alignItems="center"
@@ -64,6 +78,7 @@ const Leaderboard = () => {
         )}
         ListHeaderComponent={ListHeader}
       />
+      <StatusBar style={"light"} />
     </Div>
   );
 };

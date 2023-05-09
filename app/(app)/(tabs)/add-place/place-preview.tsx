@@ -15,6 +15,7 @@ import { useRouter } from "expo-router";
 import VerifyModal from "../../../(components)/NewPlaceFormScreen/VerifyModal";
 import { useApp } from "../../../../context/AppContext";
 import { auth, storage, db } from "../../../../firebaseInit";
+import { StatusBar } from "expo-status-bar";
 
 const PlacePreview = () => {
   const router = useRouter();
@@ -116,10 +117,10 @@ const PlacePreview = () => {
 
   return verification === false ? (
     <ScrollDiv flex={1} p={10}>
-      <Text fontSize="2xl" fontWeight="bold">
+      <Text fontSize="2xl" fontWeight="bold" mt={20}>
         Selected images
       </Text>
-      <Div alignItems="center" style={{ gap: 10 }} my={20}>
+      <Div alignItems="center" style={{ gap: 10 }} mt={15} mb={30}>
         {newPlace.placeImages.map(
           (image) =>
             image !== "" && (
@@ -139,26 +140,30 @@ const PlacePreview = () => {
       </Text>
 
       <Image
-        mt={30}
+        mt={15}
         alignSelf="center"
         h={200}
         w="100%"
         rounded="lg"
         source={{ uri: newPlace.previewMapImage }}
       />
-      <Div>
+      <Div mb={30}>
         {newPlace.description ? (
           <Div alignSelf="center" w="100%" mt={20}>
-            <Text fontSize="2xl" fontWeight="bold">
+            <Text fontSize="2xl" fontWeight="bold" mb={15}>
               Description
             </Text>
             <Text>{newPlace.description}</Text>
           </Div>
         ) : (
-          <Text fontSize="2xl">No description.</Text>
+          <Text fontSize="2xl" fontWeight="bold" my={20}>
+            No description.
+          </Text>
         )}
       </Div>
       <Button
+        bg="darker"
+        color="white"
         loading={loading}
         onPress={writeNewPlaceInDB}
         mb={30}
@@ -166,6 +171,7 @@ const PlacePreview = () => {
       >
         Confirm Place
       </Button>
+      <StatusBar style={"light"} />
     </ScrollDiv>
   ) : (
     <VerifyModal

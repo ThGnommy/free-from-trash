@@ -69,7 +69,7 @@ const MapPickerStep = () => {
     <Div style={styles.container}>
       <Text fontSize="4xl">Step 2</Text>
       <Text fontSize="2xl">Set a location</Text>
-      <Div style={styles.placeholderImageContaner}>
+      <Div style={styles.placeholderImageContaner} bg="primary">
         {mapImage ? (
           <Image
             rounded="md"
@@ -79,7 +79,12 @@ const MapPickerStep = () => {
             }}
           />
         ) : (
-          <Icon name="map" fontSize="4xl" fontFamily="Feather" />
+          <Icon
+            name="map"
+            fontSize="4xl"
+            fontFamily="Feather"
+            color="secondary"
+          />
         )}
       </Div>
       <Div
@@ -88,16 +93,12 @@ const MapPickerStep = () => {
         alignItems="center"
         justifyContent="space-between"
       >
-        <Button
-          bg="white"
-          borderColor="red500"
-          color="red500"
-          underlayColor="red100"
-          onPress={setCurrentLocation}
-        >
+        <Button bg="darker" color="white" onPress={setCurrentLocation}>
           Current Location
         </Button>
-        <Button onPress={() => setShowMap(true)}>Pick on Map</Button>
+        <Button bg="darker" color="white" onPress={() => setShowMap(true)}>
+          Pick on Map
+        </Button>
       </Div>
       <PickLocationModal
         visible={showMap}
@@ -125,7 +126,6 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#e2e8f0",
     width: 300,
     height: 200,
   },

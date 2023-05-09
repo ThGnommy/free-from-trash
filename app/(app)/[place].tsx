@@ -26,14 +26,14 @@ import {
   Text,
 } from "react-native-magnus";
 
-import MapView, { Marker, Region } from "react-native-maps";
+import MapView, { Marker } from "react-native-maps";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ref, listAll, deleteObject } from "firebase/storage";
-import { Camera } from "expo-camera";
 import DeletePlaceModal from "../(components)/PlaceScreen/DeletePlaceModal";
 import { ICreator } from "../../context/types";
 import { auth, db, storage } from "../../firebaseInit";
 import { containAStringElement } from "../../utils/utils";
+import { StatusBar } from "expo-status-bar";
 
 const PlaceScreen = () => {
   const { placeId, creatorUID } = useSearchParams();
@@ -327,6 +327,7 @@ const PlaceScreen = () => {
       ) : (
         <SkeletonPlaceholder />
       )}
+      <StatusBar style={"light"} />
     </SafeAreaView>
   );
 };

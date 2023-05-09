@@ -7,6 +7,7 @@ import { Link, useFocusEffect } from "expo-router";
 import { useApp } from "../../../../context/AppContext";
 import { useAuth } from "../../../../context/Auth";
 import { auth, db } from "../../../../firebaseInit";
+import { StatusBar } from "expo-status-bar";
 
 const Profile = () => {
   const { signOut } = useAuth();
@@ -60,7 +61,13 @@ const Profile = () => {
         Your Profile
       </Text> */}
       {currentUser?.photoURL ? (
-        <Avatar mb={10} size={100} source={{ uri: currentUser?.photoURL! }} />
+        <Avatar
+          shadow="md"
+          mt={20}
+          mb={30}
+          size={100}
+          source={{ uri: currentUser?.photoURL! }}
+        />
       ) : (
         <Skeleton.Circle w={100} h={100} mb={10} />
       )}
@@ -68,7 +75,7 @@ const Profile = () => {
       {name && userProvince && currentUser?.email ? (
         <>
           <Div
-            bg="gray200"
+            bg="primary"
             w="90%"
             p={10}
             mb={10}
@@ -82,7 +89,7 @@ const Profile = () => {
           </Div>
 
           <Div
-            bg="gray200"
+            bg="primary"
             w="90%"
             p={10}
             mb={10}
@@ -95,7 +102,7 @@ const Profile = () => {
             <Text>{name}</Text>
           </Div>
           <Div
-            bg="gray200"
+            bg="primary"
             w="90%"
             p={10}
             mb={10}
@@ -108,7 +115,7 @@ const Profile = () => {
             <Text>{userProvince}</Text>
           </Div>
           <Div
-            bg="gray200"
+            bg="primary"
             w="90%"
             p={10}
             rounded="sm"
@@ -141,7 +148,8 @@ const Profile = () => {
       >
         Logout
       </Button>
-      {__DEV__ && <Link href="_sitemap">Sitemap</Link>}
+      <StatusBar style={"dark"} />
+      {__DEV__ && <Link href="_sitemap">__DEV__: Sitemap</Link>}
     </Div>
   );
 };

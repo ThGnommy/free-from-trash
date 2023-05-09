@@ -1,14 +1,22 @@
 import { StyleSheet, TouchableOpacity } from "react-native";
 import React, { useRef } from "react";
 import * as ExpoImagePicker from "expo-image-picker";
-import { Div, Icon, Image, Snackbar, Text } from "react-native-magnus";
+import {
+  Div,
+  Icon,
+  Image,
+  Snackbar,
+  Text,
+  useTheme,
+} from "react-native-magnus";
 import { useApp } from "../../../context/AppContext";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import { Camera } from "expo-camera";
-import { useRouter, useSegments } from "expo-router";
+import { useRouter } from "expo-router";
 const ImagePickerStep = () => {
   const router = useRouter();
-  const segments = useSegments();
+
+  const { theme } = useTheme();
 
   const { setSingleNewImages, newPlace, removeSelectedImage } = useApp();
 
@@ -100,7 +108,10 @@ const ImagePickerStep = () => {
             <TouchableOpacity
               onPress={() => pickImage(idx)}
               activeOpacity={0.7}
-              style={styles.placeholderImageContaner}
+              style={{
+                ...styles.placeholderImageContaner,
+                backgroundColor: theme.colors?.primary,
+              }}
               key={idx}
             >
               {newPlace.placeImages[idx] ? (
@@ -112,7 +123,7 @@ const ImagePickerStep = () => {
                   }}
                 />
               ) : (
-                <Icon name="plus" fontSize="4xl" />
+                <Icon color="secondary" name="plus" fontSize="4xl" />
               )}
             </TouchableOpacity>
           ))}
@@ -144,7 +155,6 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#e2e8f0",
     width: 150,
     height: 100,
   },

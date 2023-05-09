@@ -7,6 +7,7 @@ import ProfilePicture from "../../../(components)/ProfileScreen/ProfilePicture";
 import { useApp } from "../../../../context/AppContext";
 import { auth, db } from "../../../../firebaseInit";
 import CitySelector from "../../../shared-components/CitySelector";
+import { StatusBar } from "expo-status-bar";
 
 const EditProfile = () => {
   const { userProvince } = useApp();
@@ -110,6 +111,7 @@ const EditProfile = () => {
           setSelectedValue={setProvince}
         />
       </Div>
+      <StatusBar style={"light"} />
     </Div>
   );
 };

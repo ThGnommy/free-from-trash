@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, Stack, useSegments } from "expo-router";
-import { Icon } from "react-native-magnus";
+import { Icon, useTheme } from "react-native-magnus";
 
 export const unstable_settings = {
   initialRouteName: "index",
@@ -8,8 +8,9 @@ export const unstable_settings = {
 
 const HomeLayout = () => {
   const segment = useSegments();
-
   const PATH = segment.join("/");
+
+  const { theme } = useTheme();
 
   return (
     <Stack>
@@ -17,11 +18,12 @@ const HomeLayout = () => {
         name="index"
         options={{
           title: "Home",
+          headerTitleAlign: "center",
           headerLeft: () => (
             <Link href={`${PATH}/leaderboard`}>
               <Icon
                 name="leaderboard"
-                color="black"
+                color="secondary"
                 fontFamily="MaterialIcons"
                 fontSize={24}
               />
@@ -31,7 +33,7 @@ const HomeLayout = () => {
             <Link href={`${PATH}/map`}>
               <Icon
                 name="map"
-                color="black"
+                color="secondary"
                 fontFamily="Feather"
                 fontSize={24}
               />
@@ -40,8 +42,28 @@ const HomeLayout = () => {
         }}
       />
       <Stack.Screen
+        name="leaderboard"
+        options={{
+          title: "Leaderboard",
+          headerTitleAlign: "center",
+          headerBackTitle: "Home",
+          headerStyle: {
+            backgroundColor: theme.colors?.darker,
+          },
+          headerTintColor: theme.colors?.primary,
+        }}
+      />
+      <Stack.Screen
         name="map"
-        options={{ title: "Places Overview", headerBackTitle: "Home" }}
+        options={{
+          title: "Places Overview",
+          headerBackTitle: "Home",
+          headerTitleAlign: "center",
+          headerStyle: {
+            backgroundColor: theme.colors?.darker,
+          },
+          headerTintColor: theme.colors?.primary,
+        }}
       />
     </Stack>
   );

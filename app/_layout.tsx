@@ -1,4 +1,4 @@
-import { ThemeProvider } from "react-native-magnus";
+import { ThemeProvider, ThemeType } from "react-native-magnus";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useFonts } from "expo-font";
 import { Slot, SplashScreen } from "expo-router";
@@ -38,17 +38,11 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
-  const colorScheme = useColorScheme();
-
-  const { signIn, user } = useAuth();
-
-  // type ThemeProps<T> = {
-  //   [name: string]: T;
-  // };
-
   const theme = {
     colors: {
-      google: "#4285F4",
+      primary: "#EDF6F9",
+      secondary: "#83C5BE",
+      darker: "#006D77",
     },
   };
 
