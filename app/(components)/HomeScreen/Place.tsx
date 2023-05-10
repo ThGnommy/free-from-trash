@@ -5,6 +5,7 @@ import { INewPlace } from "../../../context/AppContext";
 import { query, collection, where, getDocs } from "firebase/firestore";
 import { db } from "../../../firebaseInit";
 import { useRouter, useSegments } from "expo-router";
+import { useIsFocused } from "@react-navigation/native";
 
 const Place = ({
   creatorUID,
@@ -20,7 +21,8 @@ const Place = ({
 
   const router = useRouter();
   const segments = useSegments();
-  const PATH = segments.join("/");
+
+  const focused = useIsFocused();
 
   const getPlaceInfo = async () => {
     const q = query(collection(db, "users"), where("uid", "==", creatorUID));
@@ -34,7 +36,7 @@ const Place = ({
 
   useEffect(() => {
     getPlaceInfo();
-  }, []);
+  }, [focused]);
 
   const PlaceholderName = () => (
     <Div

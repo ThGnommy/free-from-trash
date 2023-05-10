@@ -24,6 +24,7 @@ import {
   ScrollDiv,
   Skeleton,
   Text,
+  useTheme,
 } from "react-native-magnus";
 
 import MapView, { Marker } from "react-native-maps";
@@ -40,7 +41,8 @@ const PlaceScreen = () => {
 
   const [place, setPlace] = useState<INewPlace>();
   const [user, setUser] = useState<ICreator>();
-  const [userJoinedPhoto, setUserJoinedPhoto] = useState<string[]>([]);
+  const [userJoinedIds, setUserJoinedIds] = useState<string[]>([]);
+  const [userJoinedPhotos, setUserJoinedPhotos] = useState<string[]>([]);
 
   const [deleteModal, setDeleteModal] = useState<boolean>(false);
 
@@ -48,9 +50,7 @@ const PlaceScreen = () => {
 
   const router = useRouter();
 
-  const userAlreadyJoined = userJoinedPhoto?.includes(
-    currentUser?.photoURL as string
-  );
+  const userAlreadyJoined = userJoinedIds?.includes(currentUser?.uid as string);
 
   const getPlaceInfo = async () => {
     const docRef = doc(db, "places", placeId as string);
@@ -86,41 +86,68 @@ const PlaceScreen = () => {
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
-      setUserJoinedPhoto(docSnap.data().userJoined);
+      setUserJoinedIds(docSnap.data().userJoined);
     } else {
       // docSnap.data() will be undefined in this case
       console.log("No such document!");
     }
   };
 
-  const handleJoined = useCallback(async () => {
+  const getUserImageFromDB = useCallback(() => {
+    try {
+      userJoinedIds.forEach(async (id) => {
+        const q = query(collection(db, "users"), where("uid", "==", id));
+
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach((doc) => {
+          // doc.data() is never undefined for query doc snapshots
+          console.log(doc.id, " => ", doc.data().photoURL);
+
+          if (userJoinedPhotos.includes(doc.data().photoURL)) return;
+
+          setUserJoinedPhotos([...userJoinedPhotos, doc.data().photoURL]);
+        });
+      });
+    } catch (error) {
+      throw new Error((error as Error).message);
+    }
+  }, [userJoinedIds]);
+
+  const handleJoined = async () => {
     const currentUserPhoto: string = currentUser!.photoURL!;
+    const currentUserUid: string = currentUser!.uid!;
 
     const placeRef = doc(db, "places", placeId as string);
 
-    if (userJoinedPhoto === undefined) {
-      setUserJoinedPhoto([currentUserPhoto]);
-    } else setUserJoinedPhoto([...userJoinedPhoto, currentUserPhoto]);
+    if (userAlreadyJoined) {
+      setUserJoinedPhotos((prev) =>
+        prev?.filter((photo) => photo !== currentUser?.photoURL)
+      );
+      setUserJoinedIds((prev) =>
+        prev?.filter((photo) => photo !== currentUser?.uid)
+      );
+    } else if (userJoinedPhotos.length === 0) {
+      setUserJoinedPhotos([currentUserPhoto]);
+      setUserJoinedIds([currentUserUid]);
+    } else {
+      setUserJoinedPhotos([...userJoinedPhotos, currentUserPhoto]);
+      setUserJoinedIds([...userJoinedIds, currentUserUid]);
+    }
 
-    const docRef = doc(db, "users", currentUser?.uid!);
-    const docSnap = await getDoc(docRef);
+    // if (userJoinedIds.length === 0) {
+    //   setUserJoinedIds([currentUserUid]);
+    // } else setUserJoinedIds([...userJoinedIds, currentUserUid]);
 
-    if (docSnap.exists()) {
+    try {
       await updateDoc(placeRef, {
         userJoined: userAlreadyJoined
-          ? arrayRemove(docSnap.data().photoURL)
-          : arrayUnion(docSnap.data().photoURL),
+          ? arrayRemove(currentUser?.uid)
+          : arrayUnion(currentUser?.uid),
       });
-
-      if (userAlreadyJoined) {
-        setUserJoinedPhoto((prev) =>
-          prev?.filter((photo) => photo !== docSnap.data().photoURL)
-        );
-      }
-    } else {
-      console.log("No such document!");
+    } catch (error) {
+      throw new Error((error as Error).message);
     }
-  }, [userJoinedPhoto]);
+  };
 
   const handleDeletePlace = async () => {
     await deleteDoc(doc(db, "places", placeId as string));
@@ -158,7 +185,7 @@ const PlaceScreen = () => {
       score: increment(10),
     });
 
-    userJoinedPhoto.forEach(async (url) => {
+    userJoinedPhotos.forEach(async (url) => {
       const usersRef = collection(db, "users");
 
       const q = query(usersRef, where("photoURL", "==", url));
@@ -183,6 +210,10 @@ const PlaceScreen = () => {
     getUserJoinedImage();
   }, []);
 
+  useEffect(() => {
+    getUserImageFromDB();
+  }, [userJoinedIds]);
+
   const SkeletonPlaceholder = () => (
     <Div flex={1} alignSelf="center" mt={20} w="90%">
       <Div>
@@ -203,7 +234,7 @@ const PlaceScreen = () => {
       edges={["bottom"]}
       style={{ height: "100%", backgroundColor: "white" }}
     >
-      {place && user && userJoinedPhoto ? (
+      {place && user && userJoinedIds ? (
         <ScrollDiv px={20}>
           <Div my={10}>
             <Avatar
@@ -276,8 +307,8 @@ const PlaceScreen = () => {
               Helpers
             </Text>
             <Div row style={{ gap: 10 }}>
-              {containAStringElement(userJoinedPhoto) ? (
-                userJoinedPhoto?.map((userPhoto, idx) => (
+              {containAStringElement(userJoinedIds) ? (
+                userJoinedPhotos?.map((userPhoto, idx) => (
                   <Avatar
                     key={userPhoto}
                     shadow="md"
@@ -286,7 +317,7 @@ const PlaceScreen = () => {
                     my={5}
                     source={{
                       uri:
-                        userPhoto ||
+                        userPhoto ??
                         "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541",
                     }}
                   />
@@ -298,7 +329,7 @@ const PlaceScreen = () => {
           </Div>
           {creatorUID !== currentUser?.uid && (
             <Button
-              bg={userAlreadyJoined ? "red600" : "blue600"}
+              bg={userAlreadyJoined ? "red500" : "darker"}
               mt={10}
               onPress={handleJoined}
             >
@@ -320,7 +351,7 @@ const PlaceScreen = () => {
             user={user!}
             isVisible={deleteModal}
             handleDeletePlace={handleDeletePlace}
-            userJoinedPhoto={userJoinedPhoto}
+            userJoinedPhoto={userJoinedIds}
             setDeleteModal={setDeleteModal}
           />
         </ScrollDiv>

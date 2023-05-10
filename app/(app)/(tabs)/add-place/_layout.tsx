@@ -17,7 +17,6 @@ const AddPlaceLayout = () => {
         options={{
           title: "Add Place",
           headerTitleAlign: "center",
-
           headerStyle: {
             backgroundColor: theme.colors?.darker,
           },
@@ -29,7 +28,6 @@ const AddPlaceLayout = () => {
         options={{
           title: "Place Preview",
           headerTitleAlign: "center",
-
           headerStyle: {
             backgroundColor: theme.colors?.darker,
           },

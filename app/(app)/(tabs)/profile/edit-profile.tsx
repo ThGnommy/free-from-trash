@@ -2,7 +2,15 @@ import { StyleSheet } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Button, Div, Input, Text } from "react-native-magnus";
 import { User, updateProfile } from "firebase/auth";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
 import ProfilePicture from "../../../(components)/ProfileScreen/ProfilePicture";
 import { useApp } from "../../../../context/AppContext";
 import { auth, db } from "../../../../firebaseInit";
@@ -14,6 +22,7 @@ const EditProfile = () => {
 
   const currentUser = auth.currentUser;
 
+  const [prevName] = useState(currentUser?.displayName);
   const [name, setName] = useState(currentUser?.displayName);
   const [currentProvince, setCurrentProvince] = useState<string>(userProvince);
   const [province, setProvince] = useState<string | undefined>(undefined);
@@ -50,9 +59,7 @@ const EditProfile = () => {
   const updateUserName = async () => {
     try {
       const userRef = doc(db, "users", currentUser?.uid!);
-
       await updateProfile(currentUser as User, { displayName: name });
-
       await updateDoc(userRef, {
         name: name,
       });
@@ -60,6 +67,24 @@ const EditProfile = () => {
       if (error instanceof Error) {
         throw new Error(error.message);
       }
+    }
+
+    // Update the creator name with the new one
+    try {
+      const placesRef = collection(db, "places");
+      // Get all the places with the previous creator name
+      const q = query(placesRef, where("creatorInfo.name", "==", prevName));
+
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach(async (docSnap) => {
+        const placeRef = doc(db, "places", docSnap.id);
+
+        await updateDoc(placeRef, {
+          ["creatorInfo.name"]: name,
+        });
+      });
+    } catch (error) {
+      throw new Error((error as Error).message);
     }
   };
 

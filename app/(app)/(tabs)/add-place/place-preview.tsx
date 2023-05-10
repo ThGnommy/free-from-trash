@@ -49,11 +49,7 @@ const PlacePreview = () => {
         // 'file' comes from the Blob or File API
         await uploadBytes(storageRef, blob)
           .then(async () => {
-            // console.log("Uploaded a blob or file!");
-          })
-          .then(async () => {
             // after update the image in storage, download it, update the url and the place data in firestore
-
             const url = await getDownloadURL(
               ref(storage, `places/${id}/image-${idx}`)
             );
