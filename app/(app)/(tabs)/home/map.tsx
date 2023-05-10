@@ -1,11 +1,12 @@
 import { StyleSheet } from "react-native";
-import React, { Suspense, useEffect, useRef, useState } from "react";
-import MapView, { Callout, LatLng, Marker } from "react-native-maps";
-import { Avatar, Div, Icon, Text } from "react-native-magnus";
+import React, { useRef } from "react";
+import MapView, { LatLng, Marker } from "react-native-maps";
+import { Div } from "react-native-magnus";
 import * as Location from "expo-location";
 import { useRouter } from "expo-router";
 import { useApp } from "../../../../context/AppContext";
 import { StatusBar } from "expo-status-bar";
+import CustomCallout from "../../../(components)/MapScreen/CustomCallout";
 
 const Map = () => {
   const { placeList, userProvince } = useApp();
@@ -46,60 +47,7 @@ const Map = () => {
             coordinate={place.coordinate}
             onPress={() => zoomToSelectedMarker(place.coordinate)}
           >
-            <Callout
-              tooltip
-              onPress={() =>
-                router.push({
-                  pathname: "[place]",
-                  params: {
-                    placeId: place.id,
-                    creatorUID: place.creatorUID,
-                  },
-                })
-              }
-            >
-              <Div
-                bg="white"
-                shadow="sm"
-                shadowColor="#000"
-                p={10}
-                mb={5}
-                rounded={10}
-                justifyContent="center"
-                alignItems="center"
-                style={{ gap: 5 }}
-              >
-                <Div
-                  justifyContent="center"
-                  alignItems="center"
-                  style={{ gap: 5 }}
-                >
-                  <Avatar
-                    size={40}
-                    source={{ uri: place.creatorInfo?.photoURL }}
-                  />
-                  <Text>{place.creatorInfo?.name}'s Place</Text>
-                </Div>
-                <Div
-                  row
-                  bg="gray900"
-                  justifyContent="center"
-                  alignItems="center"
-                  py={5}
-                  px={10}
-                  rounded="md"
-                  style={{ gap: 5 }}
-                >
-                  <Text color="white">View this place</Text>
-                  <Icon
-                    name="arrow-right"
-                    fontFamily="Feather"
-                    fontSize={20}
-                    color="white"
-                  />
-                </Div>
-              </Div>
-            </Callout>
+            <CustomCallout id={place.id!} creatorUID={place.creatorUID} />
           </Marker>
         ))}
       </MapView>

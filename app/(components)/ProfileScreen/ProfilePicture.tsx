@@ -6,13 +6,21 @@ import * as ImagePicker from "expo-image-picker";
 import { ref, uploadBytes } from "firebase/storage";
 import { User } from "firebase/auth";
 import { updateUserPhotoURL } from "../../../firebaseUtils";
-import { doc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDocs,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
 
 const ProfilePicture = () => {
   const currentUser = auth.currentUser as User;
-  const [userProfile, setUserProfile] = useState<string | null>(
-    currentUser.photoURL
-  );
+
+  const [prevUserProfilePhoto] = useState(currentUser.photoURL);
+
+  const [userProfile, setUserProfile] = useState<string | null>();
 
   const storagePath = `user-images/${currentUser?.uid}/profile-image`;
 
@@ -55,6 +63,28 @@ const ProfilePicture = () => {
       await updateUserPhotoURL(currentUser, storagePath, userRef);
       setUserProfile(currentUser.photoURL);
     });
+
+    // try {
+    //   const placesRef = collection(db, "places");
+    //   // Get all the places with the previous creator photoURL
+    //   const q = query(
+    //     placesRef,
+    //     where("creatorInfo.photoURL", "==", prevUserProfilePhoto)
+    //   );
+
+    //   const querySnapshot = await getDocs(q);
+    //   querySnapshot.forEach(async (docSnap) => {
+    //     const placeRef = doc(db, "places", docSnap.id);
+
+    //     console.log("docsnap => ", docSnap.id);
+
+    //     await updateDoc(placeRef, {
+    //       ["creatorInfo.photoURL"]: prevUserProfilePhoto,
+    //     });
+    //   });
+    // } catch (error) {
+    //   throw new Error((error as Error).message);
+    // }
   };
 
   return (
