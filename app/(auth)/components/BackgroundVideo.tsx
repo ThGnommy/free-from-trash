@@ -1,11 +1,10 @@
 import { StyleSheet } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { ResizeMode, Video } from "expo-av";
+import { useFocusEffect } from "expo-router";
 
-const BackgroundVideo = () => {
+const BackgroundVideo = ({ canPlay }: { canPlay: boolean }) => {
   const videoClip = "../../../assets/videos/home_video.mp4";
-
-  const poster = "../../../assets/images/trash-cleanup.jpg";
 
   return (
     <Video
@@ -14,9 +13,7 @@ const BackgroundVideo = () => {
       resizeMode={ResizeMode.COVER}
       isLooping={true}
       useNativeControls={false}
-      shouldPlay={true}
-      posterSource={require(poster)}
-      usePoster={true}
+      shouldPlay={canPlay}
     />
   );
 };

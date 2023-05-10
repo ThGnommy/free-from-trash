@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "free-of-trash",
-    "slug": "free-of-trash",
+    "name": "free-from-trash",
+    "slug": "free-from-trash",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "free-of-trash",
+    "scheme": "free-from-trash",
     "userInterfaceStyle": "automatic",
     "eas": {
       "projectId": "f9c1d170-5fcb-4b2f-b0f5-37b0e9c8f6b6"

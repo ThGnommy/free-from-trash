@@ -5,7 +5,7 @@ import { auth } from "../../firebaseInit";
 import { useAuth } from "../../context/Auth";
 
 const RootLayoutNav = () => {
-  const { signIn, user } = useAuth();
+  const { signIn } = useAuth();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -25,8 +25,22 @@ const RootLayoutNav = () => {
 
   return (
     <Stack>
-      <Stack.Screen name="sign-in" options={{ headerShown: false }} />
-      <Stack.Screen name="login" options={{ headerShown: false }} />
+      <Stack.Screen
+        name="sign-in"
+        options={{
+          headerShown: false,
+          animation: "fade",
+          animationDuration: 1000,
+        }}
+      />
+      <Stack.Screen
+        name="login"
+        options={{
+          headerShown: false,
+          animation: "fade",
+          animationDuration: 1000,
+        }}
+      />
     </Stack>
   );
 };

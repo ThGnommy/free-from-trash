@@ -1,6 +1,6 @@
 module.exports = {
-  scheme: "free-of-trash",
-  name: "free-of-trash",
+  scheme: "free-from-trash",
+  name: "free-from-trash",
   orientation: "portrait",
   version: "1.0.0",
   extra: {

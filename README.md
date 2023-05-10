@@ -1,2 +1,3 @@
-# free-of-trash
+# free-from-trash
+
 A React Native app

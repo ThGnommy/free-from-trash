@@ -11,6 +11,7 @@ import {
   getDoc,
   getDocs,
   increment,
+  orderBy,
   query,
   updateDoc,
   where,
@@ -101,17 +102,14 @@ const PlaceScreen = () => {
         const querySnapshot = await getDocs(q);
         querySnapshot.forEach((doc) => {
           // doc.data() is never undefined for query doc snapshots
-          console.log(doc.id, " => ", doc.data().photoURL);
-
           if (userJoinedPhotos.includes(doc.data().photoURL)) return;
-
           setUserJoinedPhotos([...userJoinedPhotos, doc.data().photoURL]);
         });
       });
     } catch (error) {
       throw new Error((error as Error).message);
     }
-  }, [userJoinedIds]);
+  }, [userJoinedIds, userJoinedPhotos]);
 
   const handleJoined = async () => {
     const currentUserPhoto: string = currentUser!.photoURL!;
@@ -133,10 +131,6 @@ const PlaceScreen = () => {
       setUserJoinedPhotos([...userJoinedPhotos, currentUserPhoto]);
       setUserJoinedIds([...userJoinedIds, currentUserUid]);
     }
-
-    // if (userJoinedIds.length === 0) {
-    //   setUserJoinedIds([currentUserUid]);
-    // } else setUserJoinedIds([...userJoinedIds, currentUserUid]);
 
     try {
       await updateDoc(placeRef, {
@@ -212,7 +206,7 @@ const PlaceScreen = () => {
 
   useEffect(() => {
     getUserImageFromDB();
-  }, [userJoinedIds]);
+  }, [userJoinedIds, userJoinedPhotos]);
 
   const SkeletonPlaceholder = () => (
     <Div flex={1} alignSelf="center" mt={20} w="90%">

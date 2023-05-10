@@ -5,8 +5,8 @@ import {
   Platform,
   TouchableOpacity,
 } from "react-native";
-import React, { createRef, useState } from "react";
-import { Link } from "expo-router";
+import React, { createRef, useEffect, useState } from "react";
+import { Link, useFocusEffect } from "expo-router";
 import { Button, Div, Icon, Input, Snackbar, Text } from "react-native-magnus";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth, db } from "../../firebaseInit";
@@ -22,6 +22,8 @@ const Signin = () => {
   const [password, setPassword] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [province, setProvince] = useState<string>("");
+
+  const [playVideo, setPlayVideo] = useState(true);
 
   const register = async (email: string, password: string) => {
     const placeholderAvatar =
@@ -59,13 +61,31 @@ const Signin = () => {
     }
   };
 
+  useFocusEffect(() => {
+    setPlayVideo(true);
+  });
+
+  useEffect(() => {
+    return () => setPlayVideo(false);
+  }, []);
+
   const snackbarRef = createRef<any>();
 
   return (
     <SafeAreaView style={styles.container}>
-      <BackgroundVideo />
+      <BackgroundVideo canPlay={playVideo} />
       <Div style={{ backgroundColor: "transparent" }}>
-        <Text style={styles.title}>FREE OF TRASH</Text>
+        <Text
+          color="primary"
+          fontSize={35}
+          mt={50}
+          fontWeight="bold"
+          bg="darker"
+          p={10}
+          rounded="md"
+        >
+          FREE FROM TRASH
+        </Text>
       </Div>
       <KeyboardAvoidingView
         style={{ width: "100%" }}
@@ -76,8 +96,16 @@ const Signin = () => {
           w={"100%"}
           px={10}
           justifyContent="center"
-          alignItems="center"
+          // alignItems="center"
         >
+          <Text
+            color="primary"
+            fontSize="6xl"
+            fontWeight="bold"
+            textAlign="left"
+          >
+            Register
+          </Text>
           <Input
             borderWidth={2}
             value={name}
@@ -112,13 +140,13 @@ const Signin = () => {
           <Button
             onPress={() => register(email, password)}
             w={"100%"}
-            bg="green600"
+            bg="darker"
             color="white"
             rounded="circle"
           >
             REGISTER WITH EMAIL
           </Button>
-          <Text fontSize="xl" color="white">
+          <Text fontSize="xl" color="white" textAlign="center">
             Already a member?{" "}
             <Link style={styles.login} href="/login">
               Log in
