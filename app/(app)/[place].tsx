@@ -345,7 +345,7 @@ const PlaceScreen = () => {
             user={user!}
             isVisible={deleteModal}
             handleDeletePlace={handleDeletePlace}
-            userJoinedPhoto={userJoinedIds}
+            userJoinedPhoto={userJoinedPhotos}
             setDeleteModal={setDeleteModal}
           />
         </ScrollDiv>
