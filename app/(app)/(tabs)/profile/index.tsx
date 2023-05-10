@@ -57,9 +57,6 @@ const Profile = () => {
       p={10}
       bg="white"
     >
-      {/* <Text fontSize="4xl" py={10}>
-        Your Profile
-      </Text> */}
       {currentUser?.photoURL ? (
         <Avatar
           shadow="md"

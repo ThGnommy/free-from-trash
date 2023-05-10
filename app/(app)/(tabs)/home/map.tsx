@@ -11,8 +11,6 @@ import CustomCallout from "../../../(components)/MapScreen/CustomCallout";
 const Map = () => {
   const { placeList, userProvince } = useApp();
 
-  const router = useRouter();
-
   const mapRef = useRef<MapView | null>(null);
 
   const goToUserRegion = async () => {
