@@ -88,14 +88,14 @@ const Place = ({
       )}
       <TouchableWithoutFeedback
         onPress={() =>
-          router.push({
-            pathname: `${segments[0]}[place]`,
-            params: {
-              placeId: id,
-              creatorUID,
-            },
-          })
-        }
+            router.push({
+              pathname: `[place]`,
+              params: {
+                placeId: id,
+                creatorUID,
+              },
+            })
+          }
       >
         <Div
           flexDir="row"

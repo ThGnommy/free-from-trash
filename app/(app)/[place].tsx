@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "expo-router";
+import { useRouter, useLocalSearchParams } from "expo-router";
 import { INewPlace } from "../../context/AppContext";
 import {
   arrayRemove,
@@ -38,7 +38,7 @@ import { containAStringElement } from "../../utils/utils";
 import { StatusBar } from "expo-status-bar";
 
 const PlaceScreen = () => {
-  const { placeId, creatorUID } = useSearchParams();
+  const { placeId, creatorUID } = useLocalSearchParams();
 
   const [place, setPlace] = useState<INewPlace>();
   const [user, setUser] = useState<ICreator>();
